@@ -1,0 +1,276 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Ryan's Blog - My World</title><meta name="author" content="Ryan"><meta name="copyright" content="Ryan"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><meta name="description" content="向着月亮出发，即使不能到达，也能站在群星之中">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Ryan&#39;s Blog">
+<meta property="og:url" content="http://yoursite.com/index.html">
+<meta property="og:site_name" content="Ryan&#39;s Blog">
+<meta property="og:description" content="向着月亮出发，即使不能到达，也能站在群星之中">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://yoursite.com/img/avatar.png">
+<meta property="article:author" content="Ryan">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yoursite.com/img/avatar.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://yoursite.com/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  ClickShowText: undefined,
+  lightbox: 'mediumZoom',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#121212","position":"bottom-left"},
+  justifiedGallery: {
+    js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+    css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+};
+
+var saveToLocal = {
+  set: function setWithExpiry(key, value, ttl) {
+    const now = new Date()
+    const expiryDay = ttl * 86400000
+    const item = {
+      value: value,
+      expiry: now.getTime() + expiryDay,
+    }
+    localStorage.setItem(key, JSON.stringify(item))
+  },
+
+  get: function getWithExpiry(key) {
+    const itemStr = localStorage.getItem(key)
+
+    if (!itemStr) {
+      return undefined
+    }
+    const item = JSON.parse(itemStr)
+    const now = new Date()
+
+    if (now.getTime() > item.expiry) {
+      localStorage.removeItem(key)
+      return undefined
+    }
+    return item.value
+  }
+}</script><script id="config_change">var GLOBAL_CONFIG_SITE = { 
+  isPost: false,
+  isHome: true,
+  isHighlightShrink: false,
+  isToc: false,
+  postUpdate: '2020-11-17 12:52:45'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><link rel="stylesheet" href="APlayer.min.css"><div id="aplayer"></div><script src="https://cdn.jsdelivr.net/gh/radium-bit/res@master/live2d/autoload.js" async></script><script src="https://cdn.jsdelivr.net/npm/meting@2/dist/Meting.min.js" async></script><script>(function () {  window.activateDarkMode = function () {
+    document.documentElement.setAttribute('data-theme', 'dark')
+    if (document.querySelector('meta[name="theme-color"]') !== null) {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+    }
+  }
+  window.activateLightMode = function () {
+    document.documentElement.setAttribute('data-theme', 'light')
+   if (document.querySelector('meta[name="theme-color"]') !== null) {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+    }
+  }
+  const autoChangeMode = 'false'
+  const t = saveToLocal.get('theme')
+  if (autoChangeMode === '1') {
+    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+    const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+    const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+    const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+    if (t === undefined) {
+      if (isLightMode) activateLightMode()
+      else if (isDarkMode) activateDarkMode()
+      else if (isNotSpecified || hasNoSupport) {
+        const now = new Date()
+        const hour = now.getHours()
+        const isNight = hour <= 6 || hour >= 18
+        isNight ? activateDarkMode() : activateLightMode()
+      }
+      window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+        if (saveToLocal.get('theme') === undefined) {
+          e.matches ? activateDarkMode() : activateLightMode()
+        }
+      })
+    } else if (t === 'light') activateLightMode()
+    else activateDarkMode()
+  } else if (autoChangeMode === '2') {
+    const now = new Date()
+    const hour = now.getHours()
+    const isNight = hour <= 6 || hour >= 18
+    if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
+    else if (t === 'light') activateLightMode()
+    else activateDarkMode()
+  } else {
+    if (t === 'dark') activateDarkMode()
+    else if (t === 'light') activateLightMode()
+  }const asideStatus = saveToLocal.get('aside-status')
+if (asideStatus !== undefined) {
+   if (asideStatus === 'hide') {
+     document.documentElement.classList.add('hide-aside')
+   } else {
+     document.documentElement.classList.remove('hide-aside')
+   }
+}})()</script><meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="Ryan's Blog" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="/img/avatar.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">15</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">8</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 爱好</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/books/"><i class="fa-fw fas fa-book"></i><span> 阅读</span></a></li><li><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li><li><a class="site-page" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 摄影</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/ziyanziyv/"><i class="fa-fw fab fa-rocketchat"></i><span> 自言自语</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div id="body-wrap"><header class="full_page" id="page-header" style="background-image: url(/img/index.jpg)"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Ryan's Blog</a></span><span id="menus"><div id="search_button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 爱好</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/books/"><i class="fa-fw fas fa-book"></i><span> 阅读</span></a></li><li><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li><li><a class="site-page" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 摄影</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/ziyanziyv/"><i class="fa-fw fab fa-rocketchat"></i><span> 自言自语</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><span class="close" id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></span></span></nav><div id="site-info"><h1 id="site-title">Ryan's Blog</h1><div id="site-subtitle"><span id="subtitle"></span></div><div id="site_social_icons"><a class="social-icon" href="https://github.com/Ryanlzz" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="https://www.zhihu.com/people/ryan-91-34" target="_blank" title=""><i class="fab fa-zhihu"></i></a><a class="social-icon" href="/1792253231@qq.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div id="scroll-down"><i class="fas fa-angle-down scroll-down-effects"></i></div></header><main class="layout" id="content-inner"><div class="recent-posts" id="recent-posts"><div class="recent-post-item"><div class="post_cover left_radius"><a href="/2019/11/18/Keras-4-%E9%A3%8E%E6%A0%BC%E8%BF%81%E7%A7%BB/" title="【日常学习】------ 深度学习(python)-Keras-4 风格迁移">     <img class="post_bg" src="/img/ziyan.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【日常学习】------ 深度学习(python)-Keras-4 风格迁移"></a></div><div class="recent-post-info"><a class="article-title" href="/2019/11/18/Keras-4-%E9%A3%8E%E6%A0%BC%E8%BF%81%E7%A7%BB/" title="【日常学习】------ 深度学习(python)-Keras-4 风格迁移">【日常学习】------ 深度学习(python)-Keras-4 风格迁移</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2019-11-17T16:00:00.000Z" title="发表于 2019-11-18 00:00:00">2019-11-18</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">深度学习</a></span></div><div class="content">摘要
+Keras实践深度学习中的风格迁移风格迁移可以将一张图片中的风格迁移到另一张图片上。
+
+
+
+mnist手写数字识别
+用以下代码来实现风格迁移给出要改变图像的路径，给出风格图像，设置迭代次数。
+
+123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778798081828384858687888990919293949596979899100101102103104105106107108109110111112113114115116117118119120121122123124125126127128129130131132133134135136137138139from keras.preprocessing.image import load_img,img_to_arrayimport numpy as npfrom keras.app ...</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/2018/10/23/opencv-5/" title="【日常学习】------ Opencv(Python版)-5 提取视频中彩色对象">     <img class="post_bg" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【日常学习】------ Opencv(Python版)-5 提取视频中彩色对象"></a></div><div class="recent-post-info"><a class="article-title" href="/2018/10/23/opencv-5/" title="【日常学习】------ Opencv(Python版)-5 提取视频中彩色对象">【日常学习】------ Opencv(Python版)-5 提取视频中彩色对象</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2018-10-23T13:00:00.000Z" title="发表于 2018-10-23 21:00:00">2018-10-23</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/Opencv/">Opencv</a></span></div><div class="content">摘要
+拍摄视频的每一帧，从BGR转换为HSV颜色空间，将HSV图像阈值为一系列蓝色，现在单独提取蓝色对象。
+
+
+
+提取蓝色对象
+以下是详细的代码：
+
+12345678910111213141516171819202122232425262728293031323334import cv2import numpy as npcap = cv2.VideoCapture(0)while(1):    # Take each frame    _, frame = cap.read()	#高斯模糊，去除噪音	frame = cv2.GaussianBlur(frame, (3, 3), 0)	    # Convert BGR to HSV    hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)    # define range of blue color in HSV    lower_blue = np.array([30,100,100])    upper_blue = np.array([130,255,255])    # Thresho ...</div></div></div><div class="recent-post-item"><div class="post_cover left_radius"><a href="/2018/10/22/Keras-3/" title="【日常学习】------ 深度学习(python)-Keras-3 新闻分类：多分类问题">     <img class="post_bg" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【日常学习】------ 深度学习(python)-Keras-3 新闻分类：多分类问题"></a></div><div class="recent-post-info"><a class="article-title" href="/2018/10/22/Keras-3/" title="【日常学习】------ 深度学习(python)-Keras-3 新闻分类：多分类问题">【日常学习】------ 深度学习(python)-Keras-3 新闻分类：多分类问题</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2018-10-22T03:18:00.000Z" title="发表于 2018-10-22 11:18:00">2018-10-22</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">深度学习</a></span></div><div class="content">摘要
+使用Python的Keras库来学习深度学习中的多分类问题 —— 路透社新闻主题分类。路透社数据集是一个简单的、广泛的使用的文本分类数据集，它包括46个不同的主题。
+
+
+
+将评论解码为英文单词
+用下面的代码解析第一条train_data[0]中的新闻
+
+12345word_index = reuters.get_word_index()reverse_word_index = dict([(value, key) for (key, value) in word_index.items()])decoded_newswire = &#x27; &#x27;.join([reverse_word_index.get(i - 3, &#x27;?&#x27;) for i in train_data[0]])print(decoded_newswire)
+
+训练网络123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960 ...</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/2018/10/20/Keras-2/" title="【日常学习】------ 深度学习(python)-Keras-2 电影评论分类：二分类问题">     <img class="post_bg" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【日常学习】------ 深度学习(python)-Keras-2 电影评论分类：二分类问题"></a></div><div class="recent-post-info"><a class="article-title" href="/2018/10/20/Keras-2/" title="【日常学习】------ 深度学习(python)-Keras-2 电影评论分类：二分类问题">【日常学习】------ 深度学习(python)-Keras-2 电影评论分类：二分类问题</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2018-10-20T14:18:00.000Z" title="发表于 2018-10-20 22:18:00">2018-10-20</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">深度学习</a></span></div><div class="content">摘要
+使用Python的Keras库来学习深度学习中的二分类问题 —— IMDB。IMDB它包含来自互联网电影数据库的50000条严重两级分化的评论，数据集被分为用于训练的25000条评论和用于测试的25000条评论，训练集和测试集都包含50%的正面评论和50%的负面评论。
+
+
+
+将评论解码为英文单词
+用下面的代码解析第一条train_data[0]中的评论
+
+123456789# word_index is a dictionary mapping words to an integer indexword_index = imdb.get_word_index()# We reverse it, mapping integer indices to wordsreverse_word_index = dict([(value, key) for (key, value) in word_index.items()])# We decode the review; note that our indices were offset by 3# because 0, 1 and 2 a ...</div></div></div><div class="recent-post-item"><div class="post_cover left_radius"><a href="/2018/10/15/opencv-4/" title="【日常学习】------ Opencv(Python版)-4 图像的算术运算">     <img class="post_bg" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【日常学习】------ Opencv(Python版)-4 图像的算术运算"></a></div><div class="recent-post-info"><a class="article-title" href="/2018/10/15/opencv-4/" title="【日常学习】------ Opencv(Python版)-4 图像的算术运算">【日常学习】------ Opencv(Python版)-4 图像的算术运算</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2018-10-15T13:00:00.000Z" title="发表于 2018-10-15 21:00:00">2018-10-15</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/Opencv/">Opencv</a></span></div><div class="content">摘要
+学习对图像的几种算术运算，如加法，减法，按位运算等。学习以下函数：cv2.add（），cv2.addWeighted（）等。
+
+
+
+图像的加法运算
+**cv2.addWeighted(m1,w1,m2,w2)**，四个参数,m1 m2是两个要相加的图片，w1 w2 表示图片的显示权重，值越大图像越清晰，对比度越高。
+
+12345678910111213import cv2img1 = cv2.imread(&#x27;6.png&#x27;)img2 = cv2.imread(&#x27;7.png&#x27;)cv2.imshow(&#x27;6&#x27;,img1)cv2.imshow(&#x27;7&#x27;,img2)dst = cv2.addWeighted(img1,0.7,img2,0.3,0)cv2.imshow(&#x27;dst&#x27;,dst)cv2.waitKey(0)cv2.destroyAllWindows()
+
+图像的位运算
+函数 cv2.threshold(src, thresh, maxval, type) 可对图像二值化处理,这个函数有 ...</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/2018/10/15/%E6%95%B0%E5%AD%97%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86-4/" title="【日常学习】------ 数字图像处理(Matlab版)-4 彩色图像处理">     <img class="post_bg" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【日常学习】------ 数字图像处理(Matlab版)-4 彩色图像处理"></a></div><div class="recent-post-info"><a class="article-title" href="/2018/10/15/%E6%95%B0%E5%AD%97%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86-4/" title="【日常学习】------ 数字图像处理(Matlab版)-4 彩色图像处理">【日常学习】------ 数字图像处理(Matlab版)-4 彩色图像处理</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2018-10-15T07:27:00.000Z" title="发表于 2018-10-15 15:27:00">2018-10-15</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/%E6%95%B0%E5%AD%97%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/">数字图像处理</a></span></div><div class="content">摘要
+彩色图像处理的基本原理，彩色生成和变换函数
+
+
+
+RGB图像
+RGB图像即彩色图像，在数字图像处理(Matlab版)-1提到过。自定义函数 **rgbcube(vx,vy,vz)**可在Matlab桌面上生成一个从点(vx,vy,vz)观察的RGB立方体。
+
+1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950function rgbcube(vx, vy, vz)%RGBCUBE Displays an RGB cube on the MATLAB desktop.%   RGBCUBE(VX, VY, VZ) displays an RGB color cube, viewed from point%   (VX, VY, VZ).  With no input arguments, RGBCUBE uses (10, 10, 4)%   as the default viewing coordinates.  To view individual ...</div></div></div><div class="recent-post-item"><div class="post_cover left_radius"><a href="/2018/10/12/Keras-1/" title="【日常学习】------ 深度学习(python)-Keras-1 Mnist手写数字识别">     <img class="post_bg" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【日常学习】------ 深度学习(python)-Keras-1 Mnist手写数字识别"></a></div><div class="recent-post-info"><a class="article-title" href="/2018/10/12/Keras-1/" title="【日常学习】------ 深度学习(python)-Keras-1 Mnist手写数字识别">【日常学习】------ 深度学习(python)-Keras-1 Mnist手写数字识别</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2018-10-12T13:45:00.000Z" title="发表于 2018-10-12 21:45:00">2018-10-12</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">深度学习</a></span></div><div class="content">摘要
+使用Python的Keras库来学习深度学习中的 “Hello World” —— Mnist。Mnist是机器学习领域里的一个经典数据集，这个数据集包含60000张训练图像和10000张测试图像。
+
+
+
+mnist手写数字识别
+用以下代码来实现mnist的网络并训练测试注：通过**(train_images,train_labels),(test_images,test_labels) = mnist.load_data()**来导入mnist数据集，是通过网址的方式来下载数据集，可是这个网址是外网，需要翻墙。
+
+12345678910111213141516171819202122232425262728293031from keras.datasets import mnistfrom keras import modelsfrom keras import layersfrom keras.utils import to_categorical(train_images,train_labels),(test_images,test_labels) = mnist.loa ...</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/2018/10/08/opencv-3/" title="【日常学习】------ Opencv(Python版)-3 鼠标作为画笔">     <img class="post_bg" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【日常学习】------ Opencv(Python版)-3 鼠标作为画笔"></a></div><div class="recent-post-info"><a class="article-title" href="/2018/10/08/opencv-3/" title="【日常学习】------ Opencv(Python版)-3 鼠标作为画笔">【日常学习】------ Opencv(Python版)-3 鼠标作为画笔</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2018-10-08T12:49:00.000Z" title="发表于 2018-10-08 20:49:00">2018-10-08</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/Opencv/">Opencv</a></span></div><div class="content">摘要
+学习如何在OpenCV中处理鼠标事件,并点击鼠标在窗口绘图。学习以下函数：cv2.setMouseCallback()，cv2.getTrackbarPos()，cv2.createTrackbar()等。
+
+
+
+
+都是官网的样例，跑跑知道是干什么的就好了。
+
+双击鼠标画圆123456789101112131415161718import cv2import numpy as np# mouse callback functiondef draw_circle(event,x,y,flags,param):    if event == cv2.EVENT_LBUTTONDBLCLK:        cv2.circle(img,(x,y),50,(255,0,0),-1)# Create a black image, a window and bind the function to windowimg = np.zeros((512,512,3), np.uint8)cv2.namedWindow(&#x27;image&#x27;)cv2.setMouseCallback( ...</div></div></div><div class="recent-post-item"><div class="post_cover left_radius"><a href="/2018/10/07/%E6%95%B0%E5%AD%97%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86-3/" title="【日常学习】------ 数字图像处理(Matlab版)-3 空间滤波">     <img class="post_bg" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【日常学习】------ 数字图像处理(Matlab版)-3 空间滤波"></a></div><div class="recent-post-info"><a class="article-title" href="/2018/10/07/%E6%95%B0%E5%AD%97%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86-3/" title="【日常学习】------ 数字图像处理(Matlab版)-3 空间滤波">【日常学习】------ 数字图像处理(Matlab版)-3 空间滤波</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2018-10-07T10:57:00.000Z" title="发表于 2018-10-07 18:57:00">2018-10-07</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/%E6%95%B0%E5%AD%97%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/">数字图像处理</a></span></div><div class="content">摘要
+了解滤波的概念、分类以及滤波的应用
+
+
+
+滤波
+滤波是图像处理中很常用的技术，主要是对图像进行操作，可以增强图像、去除图像噪声、模糊图形、锐化图像等等。在实际操作中，空间滤波其实就是一个奇数行列的矩阵，一般称为模板或者滤波器，比如3x3,5x5,9x9……扣在图像上，对扣住的图像范围进行数学运算，然后将运算结果赋给中心点，为什么是奇数呢，因为可以保证每一个模板扣住的范围都有一个确定的中心点。
+
+空间滤波的分类
+空间滤波分为两类，线性空间滤波和非线性空间滤波，什么是线性和非线性？从数学概念上讲：线性(linear)，指量与量之间按比例、成直线的关系，在数学上可以理解为一阶导数为常数的函数；非线性(non-linear)则指不按比例、不成直线的关系，一阶导数不为常数。
+
+线性空间滤波
+基于计算乘积和（线形操作）的滤波。例如**中心像素=x1w1+x2w2+x3w3+x4w4+x5w5…**，这是一个线形操作。
+
+
+执行线性空间滤波时，需理解两个相似的概念：相关和卷积。相关：R5(中心像素) = R1G1 + R2G2 + R3G3 + R4G4 + R5G5 + R6G6 + R7G ...</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/2018/10/05/opencv-2/" title="【日常学习】------ Opencv(Python版)-2 在OpenCV中绘制函数">     <img class="post_bg" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【日常学习】------ Opencv(Python版)-2 在OpenCV中绘制函数"></a></div><div class="recent-post-info"><a class="article-title" href="/2018/10/05/opencv-2/" title="【日常学习】------ Opencv(Python版)-2 在OpenCV中绘制函数">【日常学习】------ Opencv(Python版)-2 在OpenCV中绘制函数</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2018-10-05T06:32:00.000Z" title="发表于 2018-10-05 14:32:00">2018-10-05</time></span><span class="article-meta"><span class="article-meta__separator">|</span><i class="fas fa-inbox article-meta__icon"></i><a class="article-meta__categories" href="/categories/Opencv/">Opencv</a></span></div><div class="content">摘要
+学习使用OpenCV绘制不同的几何形状学习以下函数：cv2.line（），cv2.circle（），cv2.rectangle（），cv2.ellipse（），cv2.putText（）等。
+
+
+
+创建画板12# 创建一个黑色图像img = np.zeros((512,512,3), np.uint8)
+
+画线12# 画一条厚度为5像素的蓝色斜线img = cv2.line(img,(0,0),(511,511),(255,0,0),5)
+
+绘制矩形12# 绘制矩形，需要矩形的左上角和右下角。这次我们将在图像的右上角绘制一个绿色矩形。img = cv2.rectangle(img,(384,0),(510,128),(0,255,0),3)
+
+绘制圆12# 绘制圆，需要其中心坐标和半径。我们将在上面绘制的矩形内绘制一个圆。img = cv2.circle(img,(447,63), 63, (0,0,255), -1)
+
+绘制椭圆123# 要绘制椭圆，我们需要传递几个参数。一个参数是中心位置（x，y）。# 下一个参数是轴长度（长轴长度，短轴长度）。角度是椭圆在逆时针方向上的旋转角 ...</div></div></div><nav id="pagination"><div class="pagination"><span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"><i class="fas fa-chevron-right fa-fw"></i></a></div></nav></div><div class="aside_content" id="aside_content"><div class="card-widget card-info"><div class="card-content"><div class="card-info-avatar is-center"><img class="avatar-img" src="/img/avatar.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/><div class="author-info__name">Ryan</div><div class="author-info__description">向着月亮出发，即使不能到达，也能站在群星之中</div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">15</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">标签</div><div class="length-num">8</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div></div><a class="button--animated" id="card-info-btn" href="https://github.com/Ryanlzz"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/Ryanlzz" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="https://www.zhihu.com/people/ryan-91-34" target="_blank" title=""><i class="fab fa-zhihu"></i></a><a class="social-icon" href="/1792253231@qq.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div></div><div class="card-widget card-announcement"><div class="card-content"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="card-content"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2019/11/18/Keras-4-%E9%A3%8E%E6%A0%BC%E8%BF%81%E7%A7%BB/" title="【日常学习】------ 深度学习(python)-Keras-4 风格迁移"><img src="/img/ziyan.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【日常学习】------ 深度学习(python)-Keras-4 风格迁移"/></a><div class="content"><a class="title" href="/2019/11/18/Keras-4-%E9%A3%8E%E6%A0%BC%E8%BF%81%E7%A7%BB/" title="【日常学习】------ 深度学习(python)-Keras-4 风格迁移">【日常学习】------ 深度学习(python)-Keras-4 风格迁移</a><time datetime="2019-11-17T16:00:00.000Z" title="发表于 2019-11-18 00:00:00">2019-11-18</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2018/10/23/opencv-5/" title="【日常学习】------ Opencv(Python版)-5 提取视频中彩色对象"><img src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【日常学习】------ Opencv(Python版)-5 提取视频中彩色对象"/></a><div class="content"><a class="title" href="/2018/10/23/opencv-5/" title="【日常学习】------ Opencv(Python版)-5 提取视频中彩色对象">【日常学习】------ Opencv(Python版)-5 提取视频中彩色对象</a><time datetime="2018-10-23T13:00:00.000Z" title="发表于 2018-10-23 21:00:00">2018-10-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2018/10/22/Keras-3/" title="【日常学习】------ 深度学习(python)-Keras-3 新闻分类：多分类问题"><img src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【日常学习】------ 深度学习(python)-Keras-3 新闻分类：多分类问题"/></a><div class="content"><a class="title" href="/2018/10/22/Keras-3/" title="【日常学习】------ 深度学习(python)-Keras-3 新闻分类：多分类问题">【日常学习】------ 深度学习(python)-Keras-3 新闻分类：多分类问题</a><time datetime="2018-10-22T03:18:00.000Z" title="发表于 2018-10-22 11:18:00">2018-10-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2018/10/20/Keras-2/" title="【日常学习】------ 深度学习(python)-Keras-2 电影评论分类：二分类问题"><img src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【日常学习】------ 深度学习(python)-Keras-2 电影评论分类：二分类问题"/></a><div class="content"><a class="title" href="/2018/10/20/Keras-2/" title="【日常学习】------ 深度学习(python)-Keras-2 电影评论分类：二分类问题">【日常学习】------ 深度学习(python)-Keras-2 电影评论分类：二分类问题</a><time datetime="2018-10-20T14:18:00.000Z" title="发表于 2018-10-20 22:18:00">2018-10-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2018/10/15/opencv-4/" title="【日常学习】------ Opencv(Python版)-4 图像的算术运算"><img src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【日常学习】------ Opencv(Python版)-4 图像的算术运算"/></a><div class="content"><a class="title" href="/2018/10/15/opencv-4/" title="【日常学习】------ Opencv(Python版)-4 图像的算术运算">【日常学习】------ Opencv(Python版)-4 图像的算术运算</a><time datetime="2018-10-15T13:00:00.000Z" title="发表于 2018-10-15 21:00:00">2018-10-15</time></div></div></div></div></div><div class="card-widget" id="card-newest-comments"><div class="card-content"><div class="item-headline"><i class="fas fa-bolt"></i><span>最新评论</span></div><div class="aside-list"><span>正在加载中...</span></div></div></div><div class="card-widget card-categories"><div class="card-content"><div class="item-headline"><i class="fas fa-folder-open"></i><span>分类</span></div><ul class="card-category-list" id="aside-cat-list">
+            <li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Opencv/"><span class="card-category-list-name">Opencv</span><span class="card-category-list-count">5</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E6%95%B0%E5%AD%97%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/"><span class="card-category-list-name">数字图像处理</span><span class="card-category-list-count">4</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/"><span class="card-category-list-name">深度学习</span><span class="card-category-list-count">5</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E7%88%AC%E8%99%AB/"><span class="card-category-list-name">爬虫</span><span class="card-category-list-count">1</span></a></li>
+            
+            </ul></div></div><div class="card-widget card-tags"><div class="card-content"><div class="item-headline"><i class="fas fa-tags"></i><span>标签</span></div><div class="card-tag-cloud"><a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" style="font-size: 1.23em; color: rgb(13, 79, 155)">深度学习</a><a href="/tags/python/" style="font-size: 1.5em; color: rgb(74, 182, 158)">python</a><a href="/tags/Keras/" style="font-size: 1.23em; color: rgb(109, 17, 48)">Keras</a><a href="/tags/opencv/" style="font-size: 1.37em; color: rgb(4, 194, 82)">opencv</a><a href="/tags/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/" style="font-size: 1.23em; color: rgb(91, 53, 151)">图像处理</a><a href="/tags/matlab/" style="font-size: 1.37em; color: rgb(130, 127, 92)">matlab</a><a href="/tags/%E6%95%B0%E6%8D%AE%E6%89%A9%E5%A2%9E/" style="font-size: 1.1em; color: rgb(37, 61, 69)">数据扩增</a><a href="/tags/%E7%88%AC%E8%99%AB/" style="font-size: 1.1em; color: rgb(140, 37, 150)">爬虫</a></div></div></div><div class="card-widget card-archives"><div class="card-content"><div class="item-headline"><i class="fas fa-archive"></i><span>归档</span></div><ul class="card-archive-list"><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2019/11/"><span class="card-archive-list-date">十一月 2019</span><span class="card-archive-list-count">1</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2018/10/"><span class="card-archive-list-date">十月 2018</span><span class="card-archive-list-count">11</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2018/09/"><span class="card-archive-list-date">九月 2018</span><span class="card-archive-list-count">3</span></a></li></ul></div></div><div class="card-widget card-webinfo"><div class="card-content"><div class="item-headline"><i class="fas fa-chart-line"></i><span>网站资讯</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">文章数目 :</div><div class="item-count">15</div></div><div class="webinfo-item"><div class="item-name">已运行时间 :</div><div class="item-count" id="runtimeshow" data-publishDate="2020-11-17T04:52:45.272Z"></div></div><div class="webinfo-item"><div class="item-name">本站总字数 :</div><div class="item-count">14.9k</div></div><div class="webinfo-item"><div class="item-name">本站访客数 :</div><div class="item-count" id="busuanzi_value_site_uv"></div></div><div class="webinfo-item"><div class="item-name">本站总访问量 :</div><div class="item-count" id="busuanzi_value_site_pv"></div></div><div class="webinfo-item"><div class="item-name">最后更新时间 :</div><div class="item-count" id="last-push-date" data-lastPushDate="2020-11-17T04:52:45.309Z"></div></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 By Ryan</div><div class="framework-info"><span>框架 </span><a href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog"></i></button><button id="chat_btn" type="button" title="rightside.chat_btn"><i class="fas fa-sms"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div></div><hr/><div id="local-search-results"><div id="local-hits"></div><div id="local-stats"><div class="local-search-stats__hr" id="hr"><span>由</span> <a href="https://github.com/wzpan/hexo-generator-search" style="color:#49B1F5;">hexo-generator-search</a>
+ <span>提供支持</span></div></div></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div></div><div><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/medium-zoom/dist/medium-zoom.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"><script>function subtitleType () {
+  if (true) { 
+    var typed = new Typed("#subtitle", {
+      strings: "计算机科学并不仅仅关于计算机，就像天文学并不仅仅关于望远镜,我再摇摇我大脑的智慧树，看有啥果子落下,Simple is good，less is more.,规则是文明的基石，正是因为人们有着共同相信和遵守的东西，世界才能井然有序。,凡事预则立，不预则废,我捏住鼻子，其实是想憋死世界,知道自己在做什么，就不用在意别人的目光,谁让我不小心成为你生命中美好又重要的一部分呢".split(","),
+      startDelay: 300,
+      typeSpeed: 150,
+      loop: true,
+      backSpeed: 50
+    })
+  } else {
+    document.getElementById("subtitle").innerHTML = '计算机科学并不仅仅关于计算机，就像天文学并不仅仅关于望远镜'
+  }
+}
+
+if (true) {
+  if (typeof Typed === 'function') subtitleType()
+  else $.getScript('https://cdn.jsdelivr.net/npm/typed.js/lib/typed.min.js', subtitleType)
+} else {
+  subtitleType()
+}</script><script>if (document.getElementsByClassName('mermaid').length) {
+  if (window.mermaidJsLoad) mermaid.init()
+  else {
+    $.getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js', function () {
+      window.mermaidJsLoad = true
+      mermaid.initialize({
+        theme: 'default',
+      })
+      false && mermaid.init()
+    })
+  }
+}</script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><script defer="defer" id="fluttering_ribbon" mobile="true" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-fluttering-ribbon.min.js"></script><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="true" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-nest.min.js"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/gh/metowolf/MetingJS@1.2/dist/Meting.min.js"></script></div></body></html>
