@@ -150,7 +150,7 @@ if (asideStatus !== undefined) {
 </blockquote>
 <h2 id="2-下载安装Pycharm"><a href="#2-下载安装Pycharm" class="headerlink" title="2.下载安装Pycharm"></a>2.下载安装Pycharm</h2><blockquote>
 <p>下载地址: <a href="https://www.jetbrains.com/pycharm/download/#section=win">https://www.jetbrains.com/pycharm/download/#section=win</a></p>
-<p>安装激活: <a href="http://lookdiv.com/">http://lookdiv.com</a></p>
+<p>安装激活: <a href="http://lookdiv.com">http://lookdiv.com</a></p>
 </blockquote>
 <h2 id="3-下载安装CUDA和cudnn"><a href="#3-下载安装CUDA和cudnn" class="headerlink" title="3.下载安装CUDA和cudnn"></a>3.下载安装CUDA和cudnn</h2><blockquote>
 <p>我安装的都是最新版的cuda11.1和cudnn8.0.5，安装TensorFlow的时候才发现有坑……。</p>
@@ -171,11 +171,11 @@ if (asideStatus !== undefined) {
 </blockquote>
 <h3 id="创建虚拟环境，主要用于TensorFlow"><a href="#创建虚拟环境，主要用于TensorFlow" class="headerlink" title="创建虚拟环境，主要用于TensorFlow"></a>创建虚拟环境，主要用于TensorFlow</h3><blockquote>
 <ol>
-<li><p>创建虚拟环境：conda create –name tensorflow-gpu python=3.8，创建在Anaconda3的envs下。</p>
+<li><p>创建虚拟环境：conda create —name tensorflow-gpu python=3.8，创建在Anaconda3的envs下。</p>
 </li>
 <li><p>激活环境：conda activate tensorflow-gpu</p>
 </li>
-<li><p>查看环境：conda info –envs</p>
+<li><p>查看环境：conda info —envs</p>
 </li>
 <li><p>安装TensorFlow：pip install tensorflow-gpu</p>
 </li>
@@ -183,7 +183,7 @@ if (asideStatus !== undefined) {
 <blockquote>
 <p><strong>Could not load dynamic library ‘cudart64_101.dll’; dlerror: cudart64_101.dll not found</strong></p>
 <p>原因是我装的TensorFlow版本是最新的tensorflow-gpu 2.3.1，但是它还不支持CUDA11.1，办法是下载低版本的CUDA和cudnn。</p>
-<p>tensorflow各个版本需要的CUDA版本以及Cudnn的对应关系：<a href="https://www.tensorflow.org/install/source_windows#install_gpu_support_optional%EF%BC%8C">https://www.tensorflow.org/install/source_windows#install_gpu_support_optional，</a></p>
+<p>tensorflow各个版本需要的CUDA版本以及Cudnn的对应关系：<a href="https://www.tensorflow.org/install/source_windows#install_gpu_support_optional，">https://www.tensorflow.org/install/source_windows#install_gpu_support_optional，</a></p>
 <p>之后找到解决办法参考：<a href="https://blog.csdn.net/qq_32939413/article/details/105525025">https://blog.csdn.net/qq_32939413/article/details/105525025</a></p>
 <p>不过我也不着急用，再等等TensorFlow更新吧lol，听说Pytorch支持DUDA11，那用Pytorch吧。</p>
 </blockquote>
@@ -199,13 +199,13 @@ if (asideStatus !== undefined) {
 </blockquote>
 <h3 id="创建虚拟环境，主要用于Pytorch"><a href="#创建虚拟环境，主要用于Pytorch" class="headerlink" title="创建虚拟环境，主要用于Pytorch"></a>创建虚拟环境，主要用于Pytorch</h3><blockquote>
 <ol>
-<li><p>创建虚拟环境：conda create –name pytorch python=3.8</p>
+<li><p>创建虚拟环境：conda create —name pytorch python=3.8</p>
 </li>
 <li><p>激活环境：conda activate pytorch</p>
 </li>
-<li><p>查看环境：conda info –envs</p>
+<li><p>查看环境：conda info —envs</p>
 </li>
-<li><p>安装Pytorch：conda install pytorch torchvision torchaudio cudatoolkit=11.0 -c pytorch，参考官网：<a href="https://pytorch.org/%EF%BC%8C%E8%A6%81%E7%AD%89%E4%B8%80%E6%AE%B5%E6%97%B6%E9%97%B4%E4%BA%86......%E3%80%82">https://pytorch.org/，要等一段时间了......。</a></p>
+<li><p>安装Pytorch：conda install pytorch torchvision torchaudio cudatoolkit=11.0 -c pytorch，参考官网：<a href="https://pytorch.org/，要等一段时间了......。">https://pytorch.org/，要等一段时间了......。</a></p>
 </li>
 <li><p>打开python，输入 import torch，无报错，成功！</p>
 </li>
@@ -231,11 +231,11 @@ if (asideStatus !== undefined) {
 <li><p>安装jupyter notebook：conda install jupyter notebook</p>
 </li>
 </ol>
-<p>注：如果安装中途安装失败，可以使用：conda clean –all，然后重新安装，不然可能导致CondaVerificationError</p>
+<p>注：如果安装中途安装失败，可以使用：conda clean —all，然后重新安装，不然可能导致CondaVerificationError</p>
 </blockquote>
 <h3 id="创建虚拟环境，用于labelme"><a href="#创建虚拟环境，用于labelme" class="headerlink" title="创建虚拟环境，用于labelme"></a>创建虚拟环境，用于labelme</h3><blockquote>
 <ol>
-<li>创建虚拟环境：conda create –name=labelme python=3.7</li>
+<li>创建虚拟环境：conda create —name=labelme python=3.7</li>
 <li>激活环境：conda activate labelme</li>
 <li>安装pyqt5 ：pip install pyqt5</li>
 <li>安装labelme：pip install labelme</li>
