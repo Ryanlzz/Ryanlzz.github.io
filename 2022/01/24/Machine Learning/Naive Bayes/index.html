@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon1.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon32.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico">
+  <link rel="mask-icon" href="/images/favicon1.png" color="#222">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.loli.net/css?family=Noto Sans Simplified Chinese:300,300italic,400,400italic,700,700italic|Roboto Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('http://yoursite.com').hostname,
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.7.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":true,"show_result":true,"style":"default"},
+    back2top: {"enable":true,"sidebar":true,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: true,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"buttons","active":null,"storage":true,"lazyload":true,"nav":{"disqus":{"text":"Load Disqus","order":-1}}},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":false,"async":true,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="Naive Bayes基本方法朴素贝叶斯法是典型的生成学习方法。生成方法由训练数据学习联合概率分布 𝑃(𝑋,𝑌)，然后求得后验概率分布𝑃(𝑌|𝑋)。具体来说，利用训练数据学习𝑃(𝑋|𝑌)和𝑃(𝑌)的估计，得到联合概率分布：$$P(X, Y)&#x3D;P(Y) P(X \mid Y)$$朴素贝叶斯法的基本假设是条件独立性：$$\begin{aligned}P(X&amp;\l">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Naive Bayes ----------------------------------------------------------------------------------【Mechine Learning💻】">
+<meta property="og:url" content="http://yoursite.com/2022/01/24/Machine%20Learning/Naive%20Bayes/index.html">
+<meta property="og:site_name" content="Ryan&#39;s Blog">
+<meta property="og:description" content="Naive Bayes基本方法朴素贝叶斯法是典型的生成学习方法。生成方法由训练数据学习联合概率分布 𝑃(𝑋,𝑌)，然后求得后验概率分布𝑃(𝑌|𝑋)。具体来说，利用训练数据学习𝑃(𝑋|𝑌)和𝑃(𝑌)的估计，得到联合概率分布：$$P(X, Y)&#x3D;P(Y) P(X \mid Y)$$朴素贝叶斯法的基本假设是条件独立性：$$\begin{aligned}P(X&amp;\l">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-01-23T17:18:00.000Z">
+<meta property="article:modified_time" content="2022-06-23T15:42:36.000Z">
+<meta property="article:author" content="Ryan">
+<meta property="article:tag" content="Mechine Learning💻">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://yoursite.com/2022/01/24/Machine%20Learning/Naive%20Bayes/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>Naive Bayes ----------------------------------------------------------------------------------【Mechine Learning💻】 | Ryan's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Ryan's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home🏠">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-desktop"></i>Home🏠</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="Searching..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/01/24/Machine%20Learning/Naive%20Bayes/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="Ryan">
+      <meta itemprop="description" content="<font color="#444444">Truth, Goodness and Beauty</font>">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ryan's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          Naive Bayes ----------------------------------------------------------------------------------【Mechine Learning💻】
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2022-01-24 01:18:00" itemprop="dateCreated datePublished" datetime="2022-01-24T01:18:00+08:00">2022-01-24</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-06-23 23:42:36" itemprop="dateModified" datetime="2022-06-23T23:42:36+08:00">2022-06-23</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Mechine-Learning%F0%9F%92%BB/" itemprop="url" rel="index">
+                    <span itemprop="name">Mechine Learning💻</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Naive-Bayes"><a href="#Naive-Bayes" class="headerlink" title="Naive Bayes"></a>Naive Bayes</h1><h2 id="基本方法"><a href="#基本方法" class="headerlink" title="基本方法"></a>基本方法</h2><p>朴素贝叶斯法是典型的生成学习方法。生成方法由训练数据学习联合概率分布 𝑃(𝑋,𝑌)，然后求得后验概率分布𝑃(𝑌|𝑋)。具体来说，利用训练数据学习𝑃(𝑋|𝑌)和𝑃(𝑌)的估计，得到联合概率分布：<br>$$<br>P(X, Y)&#x3D;P(Y) P(X \mid Y)<br>$$<br>朴素贝叶斯法的基本假设是条件独立性：<br>$$<br>\begin{aligned}<br>P(X&amp;\left.&#x3D;x \mid Y&#x3D;c_{k}\right)&#x3D;P\left(X^{(1)}&#x3D;x^{(1)}, \cdots, X^{(n)}&#x3D;x^{(n)} \mid Y&#x3D;c_{k}\right) \<br>&amp;&#x3D;\prod_{j&#x3D;1}^{n} P\left(X^{(j)}&#x3D;x^{(j)} \mid Y&#x3D;c_{k}\right)<br>\end{aligned}<br>$$<br>这是一个较强的假设。由于这一假设，模型包含的条件概率的数量大为减少，朴素贝叶斯法的学习与预测大为简化。因而朴素贝叶斯法高效，且易于实现。其缺点是分类的性能不一定很高。</p>
+<p>朴素贝叶斯法利用贝叶斯定理与学到的联合概率模型进行分类预测：<br>$$<br>P(Y \mid X)&#x3D;\frac{P(X, Y)}{P(X)}&#x3D;\frac{P(Y) P(X \mid Y)}{\sum_{Y} P(Y) P(X \mid Y)}<br>$$<br>将输入𝑥分到后验概率最大的类𝑦<br>$$<br>y&#x3D;\arg \max <em>{c</em>{k}} P\left(Y&#x3D;c_{k}\right) \prod_{j&#x3D;1}^{n} P\left(X_{j}&#x3D;x^{(j)} \mid Y&#x3D;c_{k}\right)<br>$$<br>后验概率最大等价于0-1损失函数时的期望风险最小化</p>
+<p>模型：</p>
+<ul>
+<li>高斯模型</li>
+<li>多项式模型</li>
+<li>伯努利模型</li>
+</ul>
+<h2 id="GaussianNB-高斯朴素贝叶斯"><a href="#GaussianNB-高斯朴素贝叶斯" class="headerlink" title="GaussianNB 高斯朴素贝叶斯"></a>GaussianNB 高斯朴素贝叶斯</h2><p>特征的可能性被假设为高斯概率密度函数：<br>$$<br>P\left(x_{i} \mid y_{k}\right)&#x3D;\frac{1}{\sqrt{2 \pi \sigma_{y k}^{2}}} \exp \left(-\frac{\left(x_{i}-\mu_{y k}\right)^{2}}{2 \sigma_{y k}^{2}}\right)<br>$$<br>数学期望(mean)：𝜇</p>
+<p>方差：$\sigma^{2}&#x3D;\frac{\sum(X-\mu)^{2}}{N}$</p>
+<h2 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h2><h3 id="按原理实现"><a href="#按原理实现" class="headerlink" title="按原理实现"></a>按原理实现</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">from</span> sklearn.datasets <span class="keyword">import</span> load_iris</span><br><span class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split</span><br><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> Counter</span><br><span class="line"><span class="keyword">import</span> math</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">NaiveBayes</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        self.model = <span class="literal">None</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 数学期望</span></span><br><span class="line"><span class="meta">    @staticmethod</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">mean</span>(<span class="params">X</span>):</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">sum</span>(X) / <span class="built_in">float</span>(<span class="built_in">len</span>(X))</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 标准差（方差）</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">stdev</span>(<span class="params">self, X</span>):</span><br><span class="line">        avg = self.mean(X)</span><br><span class="line">        <span class="keyword">return</span> math.sqrt(<span class="built_in">sum</span>([<span class="built_in">pow</span>(x - avg, <span class="number">2</span>) <span class="keyword">for</span> x <span class="keyword">in</span> X]) / <span class="built_in">float</span>(<span class="built_in">len</span>(X)))</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 概率密度函数</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">gaussian_probability</span>(<span class="params">self, x, mean, stdev</span>):</span><br><span class="line">        exponent = math.exp(-(math.<span class="built_in">pow</span>(x - mean, <span class="number">2</span>) /</span><br><span class="line">                              (<span class="number">2</span> * math.<span class="built_in">pow</span>(stdev, <span class="number">2</span>))))</span><br><span class="line">        <span class="keyword">return</span> (<span class="number">1</span> / (math.sqrt(<span class="number">2</span> * math.pi) * stdev)) * exponent</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 处理X_train</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">summarize</span>(<span class="params">self, train_data</span>):</span><br><span class="line">        summaries = [(self.mean(i), self.stdev(i)) <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">zip</span>(*train_data)]</span><br><span class="line">        <span class="keyword">return</span> summaries</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 分类别求出数学期望和标准差</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">fit</span>(<span class="params">self, X, y</span>):</span><br><span class="line">        labels = <span class="built_in">list</span>(<span class="built_in">set</span>(y))</span><br><span class="line">        data = &#123;label: [] <span class="keyword">for</span> label <span class="keyword">in</span> labels&#125;</span><br><span class="line">        <span class="keyword">for</span> f, label <span class="keyword">in</span> <span class="built_in">zip</span>(X, y):</span><br><span class="line">            data[label].append(f)</span><br><span class="line">        self.model = &#123;</span><br><span class="line">            label: self.summarize(value)</span><br><span class="line">            <span class="keyword">for</span> label, value <span class="keyword">in</span> data.items()</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&#x27;gaussianNB train done!&#x27;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 计算概率</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">calculate_probabilities</span>(<span class="params">self, input_data</span>):</span><br><span class="line">        <span class="comment"># summaries:&#123;0.0: [(5.0, 0.37),(3.42, 0.40)], 1.0: [(5.8, 0.449),(2.7, 0.27)]&#125;</span></span><br><span class="line">        <span class="comment"># input_data:[1.1, 2.2]</span></span><br><span class="line">        probabilities = &#123;&#125;</span><br><span class="line">        <span class="keyword">for</span> label, value <span class="keyword">in</span> self.model.items():</span><br><span class="line">            probabilities[label] = <span class="number">1</span></span><br><span class="line">            <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(value)):</span><br><span class="line">                mean, stdev = value[i]</span><br><span class="line">                probabilities[label] *= self.gaussian_probability(</span><br><span class="line">                    input_data[i], mean, stdev)</span><br><span class="line">        <span class="keyword">return</span> probabilities</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 类别</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">predict</span>(<span class="params">self, X_test</span>):</span><br><span class="line">        <span class="comment"># &#123;0.0: 2.9680340789325763e-27, 1.0: 3.5749783019849535e-26&#125;</span></span><br><span class="line">        label = <span class="built_in">sorted</span>(</span><br><span class="line">            self.calculate_probabilities(X_test).items(),</span><br><span class="line">            key=<span class="keyword">lambda</span> x: x[-<span class="number">1</span>])[-<span class="number">1</span>][<span class="number">0</span>]</span><br><span class="line">        <span class="keyword">return</span> label</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">score</span>(<span class="params">self, X_test, y_test</span>):</span><br><span class="line">        right = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> X, y <span class="keyword">in</span> <span class="built_in">zip</span>(X_test, y_test):</span><br><span class="line">            label = self.predict(X)</span><br><span class="line">            <span class="keyword">if</span> label == y:</span><br><span class="line">                right += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> right / <span class="built_in">float</span>(<span class="built_in">len</span>(X_test))</span><br><span class="line"></span><br><span class="line"><span class="comment"># data</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">create_data</span>():</span><br><span class="line">    iris = load_iris()</span><br><span class="line">    df = pd.DataFrame(iris.data, columns=iris.feature_names)</span><br><span class="line">    df[<span class="string">&#x27;label&#x27;</span>] = iris.target</span><br><span class="line">    df.columns = [</span><br><span class="line">        <span class="string">&#x27;sepal length&#x27;</span>, <span class="string">&#x27;sepal width&#x27;</span>, <span class="string">&#x27;petal length&#x27;</span>, <span class="string">&#x27;petal width&#x27;</span>, <span class="string">&#x27;label&#x27;</span></span><br><span class="line">    ]</span><br><span class="line">    data = np.array(df.iloc[:<span class="number">100</span>, :])</span><br><span class="line">    <span class="comment"># print(data)</span></span><br><span class="line">    <span class="keyword">return</span> data[:, :-<span class="number">1</span>], data[:, -<span class="number">1</span>]</span><br><span class="line"></span><br><span class="line">X, y = create_data()</span><br><span class="line">X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=<span class="number">0.3</span>)</span><br><span class="line"></span><br><span class="line">model = NaiveBayes()</span><br><span class="line">model.fit(X_train,y_train)</span><br><span class="line"><span class="built_in">print</span>(model.predict([<span class="number">1.4</span>, <span class="number">4.2</span>, <span class="number">1.3</span>, <span class="number">5.2</span>]))</span><br><span class="line"><span class="built_in">print</span>(model.score(X_test, y_test))</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="sk-learn实现"><a href="#sk-learn实现" class="headerlink" title="sk-learn实现"></a>sk-learn实现</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">from</span> sklearn.datasets <span class="keyword">import</span> load_iris</span><br><span class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split</span><br><span class="line"><span class="keyword">from</span> sklearn.naive_bayes <span class="keyword">import</span> GaussianNB</span><br><span class="line"><span class="keyword">from</span> sklearn.naive_bayes <span class="keyword">import</span> BernoulliNB, MultinomialNB <span class="comment"># 伯努利模型和多项式模型</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># data</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">create_data</span>():</span><br><span class="line">    iris = load_iris()</span><br><span class="line">    df = pd.DataFrame(iris.data, columns=iris.feature_names)</span><br><span class="line">    df[<span class="string">&#x27;label&#x27;</span>] = iris.target</span><br><span class="line">    df.columns = [</span><br><span class="line">        <span class="string">&#x27;sepal length&#x27;</span>, <span class="string">&#x27;sepal width&#x27;</span>, <span class="string">&#x27;petal length&#x27;</span>, <span class="string">&#x27;petal width&#x27;</span>, <span class="string">&#x27;label&#x27;</span></span><br><span class="line">    ]</span><br><span class="line">    data = np.array(df.iloc[:<span class="number">100</span>, :])</span><br><span class="line">    <span class="comment"># print(data)</span></span><br><span class="line">    <span class="keyword">return</span> data[:, :-<span class="number">1</span>], data[:, -<span class="number">1</span>]</span><br><span class="line"></span><br><span class="line">X, y = create_data()</span><br><span class="line">X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=<span class="number">0.3</span>)</span><br><span class="line"></span><br><span class="line">clf = GaussianNB()</span><br><span class="line">clf.fit(X_train, y_train)</span><br><span class="line"><span class="built_in">print</span>(clf.predict([[<span class="number">4.4</span>,  <span class="number">3.2</span>,  <span class="number">1.3</span>,  <span class="number">0.2</span>]]))</span><br><span class="line"><span class="built_in">print</span>(clf.score(X_test, y_test))</span><br><span class="line"></span><br><span class="line">clf = BernoulliNB()</span><br><span class="line">clf.fit(X_train, y_train)</span><br><span class="line"><span class="built_in">print</span>(clf.predict([[<span class="number">4.4</span>,  <span class="number">3.2</span>,  <span class="number">1.3</span>,  <span class="number">0.2</span>]]))</span><br><span class="line"><span class="built_in">print</span>(clf.score(X_test, y_test))</span><br><span class="line"></span><br><span class="line">clf = MultinomialNB()</span><br><span class="line">clf.fit(X_train, y_train)</span><br><span class="line"><span class="built_in">print</span>(clf.predict([[<span class="number">4.4</span>,  <span class="number">3.2</span>,  <span class="number">1.3</span>,  <span class="number">0.2</span>]]))</span><br><span class="line"><span class="built_in">print</span>(clf.score(X_test, y_test))</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p>《统计学习方法第二版》<br>《机器学习》西瓜书<br>参考代码：<a target="_blank" rel="noopener" href="https://github.com/wzyonggege/statistical-learning-method">https://github.com/wzyonggege/statistical-learning-method</a><br><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/26262151">https://zhuanlan.zhihu.com/p/26262151</a></p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>Post author:  </strong>Ryan
+  </li>
+  <li class="post-copyright-link">
+    <strong>Post link: </strong>
+    <a href="http://yoursite.com/2022/01/24/Machine%20Learning/Naive%20Bayes/" title="Naive Bayes ----------------------------------------------------------------------------------【Mechine Learning💻】">http://yoursite.com/2022/01/24/Machine Learning/Naive Bayes/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/Mechine-Learning%F0%9F%92%BB/" rel="tag"><i class="fa fa-tag"></i> Mechine Learning💻</a>
+          </div>
+
+        
+  <div class="post-widgets">
+    <div class="wp_rating">
+      <div id="wpac-rating"></div>
+    </div>
+  </div>
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/01/23/Machine%20Learning/KNN/" rel="prev" title="K-Nearest Neighbor (KNN) ------------------------------------------------------------------【Mechine Learning💻】">
+      <i class="fa fa-chevron-left"></i> K-Nearest Neighbor (KNN) ------------------------------------------------------------------【Mechine Learning💻】
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/01/25/Machine%20Learning/Decision%20Trees/" rel="next" title="Decision Trees --------------------------------------------------------------------------------【Mechine Learning💻】">
+      Decision Trees --------------------------------------------------------------------------------【Mechine Learning💻】 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Naive-Bayes"><span class="nav-number">1.</span> <span class="nav-text">Naive Bayes</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E6%96%B9%E6%B3%95"><span class="nav-number">1.1.</span> <span class="nav-text">基本方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GaussianNB-%E9%AB%98%E6%96%AF%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF"><span class="nav-number">1.2.</span> <span class="nav-text">GaussianNB 高斯朴素贝叶斯</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.3.</span> <span class="nav-text">代码实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8C%89%E5%8E%9F%E7%90%86%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.3.1.</span> <span class="nav-text">按原理实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#sk-learn%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.3.2.</span> <span class="nav-text">sk-learn实现</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">1.4.</span> <span class="nav-text">参考</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Ryan"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">Ryan</p>
+  <div class="site-description" itemprop="description"><font color="#444444">Truth, Goodness and Beauty</font></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">22</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Ryanlzz" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Ryanlzz" rel="noopener" target="_blank"><i class="fa fa-fw fa-fab fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:isliuze@gmail.com" title="E-Mail → mailto:isliuze@gmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-fa fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/people/ryan-91-34" title="ZHIHU → https:&#x2F;&#x2F;www.zhihu.com&#x2F;people&#x2F;ryan-91-34" rel="noopener" target="_blank"><i class="fa fa-fw fa-fab fa-zhihu"></i>ZHIHU</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/atom.xml" title="RSS → &#x2F;atom.xml"><i class="fa fa-fw fa-rss"></i>RSS</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ryan</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a>
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">Theme – <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/pjax/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/medium-zoom@1/dist/medium-zoom.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.getAttribute('pjax') !== null) {
+      element.setAttribute('pjax', '');
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+  <script pjax>
+  if (CONFIG.page.isPost) {
+    wpac_init = window.wpac_init || [];
+    wpac_init.push({
+      widget: 'Rating',
+      id: ,
+      el: 'wpac-rating',
+      color: 'fc6423'
+    });
+    (function() {
+      if ('WIDGETPACK_LOADED' in window) return;
+      WIDGETPACK_LOADED = true;
+      var mc = document.createElement('script');
+      mc.type = 'text/javascript';
+      mc.async = true;
+      mc.src = '//embed.widgetpack.com/widget.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mc, s.nextSibling);
+    })();
+  }
+  </script>
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+
+  
+
+    </div>
+</body>
+</html>

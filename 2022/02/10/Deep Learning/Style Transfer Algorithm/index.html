@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon1.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon32.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico">
+  <link rel="mask-icon" href="/images/favicon1.png" color="#222">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.loli.net/css?family=Noto Sans Simplified Chinese:300,300italic,400,400italic,700,700italic|Roboto Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('http://yoursite.com').hostname,
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.7.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":true,"show_result":true,"style":"default"},
+    back2top: {"enable":true,"sidebar":true,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: true,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"buttons","active":null,"storage":true,"lazyload":true,"nav":{"disqus":{"text":"Load Disqus","order":-1}}},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":false,"async":true,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="Style Transfer Algorithm论文地址：https:&#x2F;&#x2F;arxiv.org&#x2F;abs&#x2F;1508.06576 摘要本文主要研究卷积神经网络在图像风格迁移方面的应用，目的是在基于卷积神经网络特征可视化的原理上实现风格迁移算法，该算法能够将图片中的内容特征和风格特征分离并将其重新组合，生成一张具有艺术风格的图片。算法使用预训练的VGG-19网络模型提取内容特征和风格特征，通过各自的代价函">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Style Transfer Algorithm --------------------------------------------------------------------------------【Project📂】">
+<meta property="og:url" content="http://yoursite.com/2022/02/10/Deep%20Learning/Style%20Transfer%20Algorithm/index.html">
+<meta property="og:site_name" content="Ryan&#39;s Blog">
+<meta property="og:description" content="Style Transfer Algorithm论文地址：https:&#x2F;&#x2F;arxiv.org&#x2F;abs&#x2F;1508.06576 摘要本文主要研究卷积神经网络在图像风格迁移方面的应用，目的是在基于卷积神经网络特征可视化的原理上实现风格迁移算法，该算法能够将图片中的内容特征和风格特征分离并将其重新组合，生成一张具有艺术风格的图片。算法使用预训练的VGG-19网络模型提取内容特征和风格特征，通过各自的代价函">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://z3.ax1x.com/2021/04/10/cafj8x.png">
+<meta property="og:image" content="https://z3.ax1x.com/2021/04/10/cacIJK.jpg">
+<meta property="og:image" content="https://z3.ax1x.com/2021/04/10/cafv26.png">
+<meta property="og:image" content="https://z3.ax1x.com/2021/04/10/cacoRO.png">
+<meta property="og:image" content="https://z3.ax1x.com/2021/04/10/cacTzD.png">
+<meta property="og:image" content="https://z3.ax1x.com/2021/04/10/cacHQe.png">
+<meta property="article:published_time" content="2022-02-09T17:39:00.000Z">
+<meta property="article:modified_time" content="2022-07-03T14:39:02.000Z">
+<meta property="article:author" content="Ryan">
+<meta property="article:tag" content="Deep Learning📉">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://z3.ax1x.com/2021/04/10/cafj8x.png">
+
+<link rel="canonical" href="http://yoursite.com/2022/02/10/Deep%20Learning/Style%20Transfer%20Algorithm/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>Style Transfer Algorithm --------------------------------------------------------------------------------【Project📂】 | Ryan's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Ryan's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home🏠">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-desktop"></i>Home🏠</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="Searching..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/02/10/Deep%20Learning/Style%20Transfer%20Algorithm/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="Ryan">
+      <meta itemprop="description" content="<font color="#444444">Truth, Goodness and Beauty</font>">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ryan's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          Style Transfer Algorithm --------------------------------------------------------------------------------【Project📂】
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2022-02-10 01:39:00" itemprop="dateCreated datePublished" datetime="2022-02-10T01:39:00+08:00">2022-02-10</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-07-03 22:39:02" itemprop="dateModified" datetime="2022-07-03T22:39:02+08:00">2022-07-03</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Deep-Learning%F0%9F%93%89/" itemprop="url" rel="index">
+                    <span itemprop="name">Deep Learning📉</span>
+                  </a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Deep-Learning%F0%9F%93%89/Project%F0%9F%93%82/" itemprop="url" rel="index">
+                    <span itemprop="name">Project📂</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Style-Transfer-Algorithm"><a href="#Style-Transfer-Algorithm" class="headerlink" title="Style Transfer Algorithm"></a>Style Transfer Algorithm</h1><p>论文地址：<a target="_blank" rel="noopener" href="https://arxiv.org/abs/1508.06576">https://arxiv.org/abs/1508.06576</a></p>
+<h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>本文主要研究卷积神经网络在图像风格迁移方面的应用，目的是在基于卷积神经网络特征可视化的原理上实现风格迁移算法，该算法能够将图片中的内容特征和风格特征分离并将其重新组合，生成一张具有艺术风格的图片。算法使用预训练的VGG-19网络模型提取内容特征和风格特征，通过各自的代价函数计算出与生成图片之间的损失，再用迭代的方式降低损失使得生成图片的内容和给定的内容图片越相似、风格和给定的风格图片越相似。</p>
+<h2 id="风格迁移算法的原理与实现"><a href="#风格迁移算法的原理与实现" class="headerlink" title="风格迁移算法的原理与实现"></a>风格迁移算法的原理与实现</h2><h3 id="风格迁移的基本原理"><a href="#风格迁移的基本原理" class="headerlink" title="风格迁移的基本原理"></a>风格迁移的基本原理</h3><p>首先是内容表示，深层次的网络更加关注图片的内容信息即图片整体的轮廓，所以可以将高层次的特征用做生成图片的内容表示。</p>
+<p>然后是风格表示，低层次的网络更加关注于图片局部的风格表示，随着网络的加深，风格会越来越趋向于全局性，用来做风格迁移.</p>
+<p>我们希望无论是局部还是整体的风格都比较接近风格图像，所以将不同层次的特征都用来做风格表示。</p>
+<p>关于生成的图片，训练开始会初始化一张噪声图片，或者直接用内容图片来做初始化的图片，然后根据内容损失和风格损失来跟新噪声图片，使得噪声图片最后转变为同时具有内容和风格的艺术图片。原理如下图所示。</p>
+<p><img src="https://z3.ax1x.com/2021/04/10/cafj8x.png"></p>
+<h3 id="VGG-19网络模型"><a href="#VGG-19网络模型" class="headerlink" title="VGG-19网络模型"></a>VGG-19网络模型</h3><p>VGGNet在2014年的ILSVRC比赛中取得了亚军的成绩，具有较深的的网络层次，本次实验使用预训练的VGG-19模型来生风格图片。</p>
+<p>VGG-19模型分为卷积层、池化层、全连接层、softmax最终输出。在卷积神经网络风格迁移中，只需要利用该模型中的conv1到最后一个maxpool。其中风格特征的抽取需要用到block1_conv1，block2_conv1，block3_conv1，block4_conv1, block5_conv1层，而内容特征只需要用到block4_conv2层，通过该模型已经训练好的权重和偏置，结合自己需要风格迁移的图片数据，可以求得初始化的代价函数。VGG-19结构如图所示。</p>
+<p><img src="https://z3.ax1x.com/2021/04/10/cacIJK.jpg"></p>
+<h3 id="风格迁移具体原理"><a href="#风格迁移具体原理" class="headerlink" title="风格迁移具体原理"></a>风格迁移具体原理</h3><p>算法使用VGG-19模型来生成图片。在训练时，会去掉网络的全连接层，接着用向前传播的方式得到内容图片和风格图片的特征图，通过损失函数与生成图来计算各自的损失，最后使用反向传播来降低损失，调整生成图的像素。可以使用随机噪声来初始化生成图片，也可以使用内容图片来初始化图片。具体原理如图所示。</p>
+<p><img src="https://z3.ax1x.com/2021/04/10/cafv26.png"></p>
+<h3 id="内容代价函数"><a href="#内容代价函数" class="headerlink" title="内容代价函数"></a>内容代价函数</h3><p>在卷积神经网络中，可以假设某一layer具有$\mathrm{N}<em>{1}$个卷积核，那么在这$\mathrm{N}</em>{1}$个卷积核中会生成$\mathrm{N}<em>{1}$个特征图，假设这些特征图的维度为$\mathrm{M}</em>{1}$，$\mathrm{M}<em>{1}$指的是特征图高和宽的乘积。设网络一共有$l$层，将第$l$层的特征图表示成$\mathrm{F}^{1}$。并且$F^{l} \in R^{N</em>{l} M_{I}}$，然后用$F_{i j}^{l}$来表示在第$l$层第i个卷积核在位置j上的激活值大小。内容图片是如此，那么随机生成的内容风格图片的原理也是如此，用$P_{i j}^{l}$来表示第$l$层中的第i个卷积核中第j个位置上的激活值大小。</p>
+<p>表示为：<br>$$<br>L_{\text {content }}(p, x, l)&#x3D;\frac{1}{2} \sum_{i j}\left(F_{i j}^{l}-P_{i j}^{l}\right)^{2}<br>$$<br>其中p表示为内容图片，$x$表示为生成图片，$l$表示为层数，在求取内容损失时，只需要用到的是conv4_2这一层的卷积层。</p>
+<h3 id="风格代价函数"><a href="#风格代价函数" class="headerlink" title="风格代价函数"></a>风格代价函数</h3><p>图像的风格可以用风格图像的特征图和生成图片特征图的相关性来表示，这里要用到Gram矩阵，Gram为特征图向量化之后的内积矩阵，比如有32个特征图，每个特征图的高和宽都为10，那特征图向量化之后就是一个100维的向量，32个特征图就总共有32个向量，这些向量两两做内积，则一共会生成32*32个数，将这些数顺序的存放在一个矩阵里，得到的就是Gram矩阵。</p>
+<p>表示为：<br>$$<br>G_{i j}^{l}&#x3D;\sum_{k} F_{i k} F_{j k}<br>$$<br>此处的i，j分别表示的是不同的卷积核所产生的特征图。$k$表示的是两个向量对应相同的位置，通过让两个激活值相乘，然后将所有相乘后的值进行相加，最终得到代表风格表示的Gram矩阵。</p>
+<p>风格图片的风格矩阵：<br>$$<br>A_{i j}^{l}&#x3D;\sum_{k} a_{i k}^{l} a_{j k}^{l}<br>$$<br>上式代表的是生成图片的Gram矩阵，和风格图片的Gram矩阵计算原理一样。风格图片的Gram矩阵与生成图片的Gram矩阵差值越小，这说明彼此相关性越大，在风格上更加相似。</p>
+<p>风格矩阵差值计算：<br>$$<br>E^{l}&#x3D;\frac{1}{4 N_{l}^{2} M_{l}^{2}} \sum_{i j}\left(G_{i j}^{l}-A_{i j}^{l}\right)^{2}<br>$$<br>其中$E^{l}$其只是其中一层，由于要用到所有的层对应的风格特征，所以求取风格代价函数需要将所有层的风格损失加起来。则总的风格损失表示如下：<br>$$<br>L_{\text {style }}(a, x)&#x3D;\sum_{i&#x3D;0}^{L} w_{l} E_{l}<br>$$<br>其中a表示原始的风格图像，x表示生成的图像，w表示为每一层所需要的权重。</p>
+<h3 id="总的代价函数"><a href="#总的代价函数" class="headerlink" title="总的代价函数"></a>总的代价函数</h3><p>在内容代价和风格代价函数求得的情况下，总的代价函数就能知道了：<br>$$<br>L_{\text {total }}(p, a, x)&#x3D;\alpha L_{\text {content }}(p, x)+\beta L_{\text {style }}(a, x)<br>$$<br>α，β为内容图片和风格图片各自的权重。α越大，则生成图片内容和内容图越相似，β越大，则生成图片和风格图的风格越相似。</p>
+<h2 id="代码实现（pytorch）"><a href="#代码实现（pytorch）" class="headerlink" title="代码实现（pytorch）"></a>代码实现（pytorch）</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">import</span> torch.nn <span class="keyword">as</span> nn</span><br><span class="line"><span class="keyword">import</span> torch.nn.functional <span class="keyword">as</span> F</span><br><span class="line"><span class="keyword">import</span> torch.optim <span class="keyword">as</span> optim</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> torchvision.transforms <span class="keyword">as</span> transforms</span><br><span class="line"><span class="keyword">import</span> torchvision.models <span class="keyword">as</span> models</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> copy</span><br><span class="line"></span><br><span class="line">device = torch.device(<span class="string">&quot;cuda&quot;</span> <span class="keyword">if</span> torch.cuda.is_available() <span class="keyword">else</span> <span class="string">&quot;cpu&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># desired size of the output image</span></span><br><span class="line">imsize = <span class="number">512</span> <span class="keyword">if</span> torch.cuda.is_available() <span class="keyword">else</span> <span class="number">128</span>  <span class="comment"># use small size if no gpu</span></span><br><span class="line"></span><br><span class="line">loader = transforms.Compose([</span><br><span class="line">    transforms.Resize([<span class="number">360</span>,<span class="number">512</span>]),  <span class="comment"># scale imported image</span></span><br><span class="line">    transforms.ToTensor()])  <span class="comment"># transform it into a torch tensor</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">image_loader</span>(<span class="params">image_name</span>):</span><br><span class="line">    image = Image.<span class="built_in">open</span>(image_name)</span><br><span class="line">    <span class="comment"># fake batch dimension required to fit network&#x27;s input dimensions</span></span><br><span class="line">    image = loader(image).unsqueeze(<span class="number">0</span>)</span><br><span class="line">    <span class="keyword">return</span> image.to(device, torch.<span class="built_in">float</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">style_img = image_loader(<span class="string">&quot;style3.jpg&quot;</span>)</span><br><span class="line">content_img = image_loader(<span class="string">&quot;content3.jpg&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(style_img.size())</span><br><span class="line"><span class="built_in">print</span>(content_img.size())</span><br><span class="line"></span><br><span class="line"><span class="keyword">assert</span> style_img.size() == content_img.size(), \</span><br><span class="line">    <span class="string">&quot;we need to import style and content images of the same size&quot;</span></span><br><span class="line"></span><br><span class="line">unloader = transforms.ToPILImage()  <span class="comment"># reconvert into PIL image</span></span><br><span class="line"></span><br><span class="line">plt.ion()</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">imshow</span>(<span class="params">tensor, title=<span class="literal">None</span></span>):</span><br><span class="line">    image = tensor.cpu().clone()  <span class="comment"># we clone the tensor to not do changes on it</span></span><br><span class="line">    image = image.squeeze(<span class="number">0</span>)      <span class="comment"># remove the fake batch dimension</span></span><br><span class="line">    image = unloader(image)</span><br><span class="line">    plt.imshow(image)</span><br><span class="line">    <span class="keyword">if</span> title <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">        plt.title(title)</span><br><span class="line">    plt.pause(<span class="number">0.001</span>) <span class="comment"># pause a bit so that plots are updated</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">plt.figure()</span><br><span class="line">imshow(style_img, title=<span class="string">&#x27;Style Image&#x27;</span>)</span><br><span class="line"></span><br><span class="line">plt.figure()</span><br><span class="line">imshow(content_img, title=<span class="string">&#x27;Content Image&#x27;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">ContentLoss</span>(nn.Module):</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, target,</span>):</span><br><span class="line">        <span class="built_in">super</span>(ContentLoss, self).__init__()</span><br><span class="line">        <span class="comment"># we &#x27;detach&#x27; the target content from the tree used</span></span><br><span class="line">        <span class="comment"># to dynamically compute the gradient: this is a stated value,</span></span><br><span class="line">        <span class="comment"># not a variable. Otherwise the forward method of the criterion</span></span><br><span class="line">        <span class="comment"># will throw an error.</span></span><br><span class="line">        self.target = target.detach()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, <span class="built_in">input</span></span>):</span><br><span class="line">        self.loss = F.mse_loss(<span class="built_in">input</span>, self.target)</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">input</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">gram_matrix</span>(<span class="params"><span class="built_in">input</span></span>):</span><br><span class="line">    a, b, c, d = <span class="built_in">input</span>.size()  <span class="comment"># a=batch size(=1)</span></span><br><span class="line">    <span class="comment"># b=number of feature maps</span></span><br><span class="line">    <span class="comment"># (c,d)=dimensions of a f. map (N=c*d)</span></span><br><span class="line"></span><br><span class="line">    features = <span class="built_in">input</span>.view(a * b, c * d)  <span class="comment"># resise F_XL into \hat F_XL</span></span><br><span class="line"></span><br><span class="line">    G = torch.mm(features, features.t())  <span class="comment"># compute the gram product</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># we &#x27;normalize&#x27; the values of the gram matrix</span></span><br><span class="line">    <span class="comment"># by dividing by the number of element in each feature maps.</span></span><br><span class="line">    <span class="keyword">return</span> G.div(a * b * c * d)</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">StyleLoss</span>(nn.Module):</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, target_feature</span>):</span><br><span class="line">        <span class="built_in">super</span>(StyleLoss, self).__init__()</span><br><span class="line">        self.target = gram_matrix(target_feature).detach()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, <span class="built_in">input</span></span>):</span><br><span class="line">        G = gram_matrix(<span class="built_in">input</span>)</span><br><span class="line">        self.loss = F.mse_loss(G, self.target)</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">input</span></span><br><span class="line"></span><br><span class="line">cnn = models.vgg19(pretrained=<span class="literal">True</span>).features.to(device).<span class="built_in">eval</span>()</span><br><span class="line"></span><br><span class="line">cnn_normalization_mean = torch.tensor([<span class="number">0.485</span>, <span class="number">0.456</span>, <span class="number">0.406</span>]).to(device)</span><br><span class="line">cnn_normalization_std = torch.tensor([<span class="number">0.229</span>, <span class="number">0.224</span>, <span class="number">0.225</span>]).to(device)</span><br><span class="line"></span><br><span class="line"><span class="comment"># create a module to normalize input image so we can easily put it in a</span></span><br><span class="line"><span class="comment"># nn.Sequential</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Normalization</span>(nn.Module):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, mean, std</span>):</span><br><span class="line">        <span class="built_in">super</span>(Normalization, self).__init__()</span><br><span class="line">        <span class="comment"># .view the mean and std to make them [C x 1 x 1] so that they can</span></span><br><span class="line">        <span class="comment"># directly work with image Tensor of shape [B x C x H x W].</span></span><br><span class="line">        <span class="comment"># B is batch size. C is number of channels. H is height and W is width.</span></span><br><span class="line">        self.mean = torch.tensor(mean).view(-<span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>)</span><br><span class="line">        self.std = torch.tensor(std).view(-<span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, img</span>):</span><br><span class="line">        <span class="comment"># normalize img</span></span><br><span class="line">        <span class="keyword">return</span> (img - self.mean) / self.std</span><br><span class="line"></span><br><span class="line"><span class="comment"># desired depth layers to compute style/content losses :</span></span><br><span class="line">content_layers_default = [<span class="string">&#x27;conv_4&#x27;</span>]</span><br><span class="line">style_layers_default = [<span class="string">&#x27;conv_1&#x27;</span>, <span class="string">&#x27;conv_2&#x27;</span>, <span class="string">&#x27;conv_3&#x27;</span>, <span class="string">&#x27;conv_4&#x27;</span>, <span class="string">&#x27;conv_5&#x27;</span>]</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">get_style_model_and_losses</span>(<span class="params">cnn, normalization_mean, normalization_std,</span></span><br><span class="line"><span class="params">                               style_img, content_img,</span></span><br><span class="line"><span class="params">                               content_layers=content_layers_default,</span></span><br><span class="line"><span class="params">                               style_layers=style_layers_default</span>):</span><br><span class="line">    cnn = copy.deepcopy(cnn)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># normalization module</span></span><br><span class="line">    normalization = Normalization(normalization_mean, normalization_std).to(device)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># just in order to have an iterable access to or list of content/syle</span></span><br><span class="line">    <span class="comment"># losses</span></span><br><span class="line">    content_losses = []</span><br><span class="line">    style_losses = []</span><br><span class="line"></span><br><span class="line">    <span class="comment"># assuming that cnn is a nn.Sequential, so we make a new nn.Sequential</span></span><br><span class="line">    <span class="comment"># to put in modules that are supposed to be activated sequentially</span></span><br><span class="line">    model = nn.Sequential(normalization)</span><br><span class="line"></span><br><span class="line">    i = <span class="number">0</span>  <span class="comment"># increment every time we see a conv</span></span><br><span class="line">    <span class="keyword">for</span> layer <span class="keyword">in</span> cnn.children():</span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">isinstance</span>(layer, nn.Conv2d):</span><br><span class="line">            i += <span class="number">1</span></span><br><span class="line">            name = <span class="string">&#x27;conv_&#123;&#125;&#x27;</span>.<span class="built_in">format</span>(i)</span><br><span class="line">        <span class="keyword">elif</span> <span class="built_in">isinstance</span>(layer, nn.ReLU):</span><br><span class="line">            name = <span class="string">&#x27;relu_&#123;&#125;&#x27;</span>.<span class="built_in">format</span>(i)</span><br><span class="line">            <span class="comment"># The in-place version doesn&#x27;t play very nicely with the ContentLoss</span></span><br><span class="line">            <span class="comment"># and StyleLoss we insert below. So we replace with out-of-place</span></span><br><span class="line">            <span class="comment"># ones here.</span></span><br><span class="line">            layer = nn.ReLU(inplace=<span class="literal">False</span>)</span><br><span class="line">        <span class="keyword">elif</span> <span class="built_in">isinstance</span>(layer, nn.MaxPool2d):</span><br><span class="line">            name = <span class="string">&#x27;pool_&#123;&#125;&#x27;</span>.<span class="built_in">format</span>(i)</span><br><span class="line">        <span class="keyword">elif</span> <span class="built_in">isinstance</span>(layer, nn.BatchNorm2d):</span><br><span class="line">            name = <span class="string">&#x27;bn_&#123;&#125;&#x27;</span>.<span class="built_in">format</span>(i)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">raise</span> RuntimeError(<span class="string">&#x27;Unrecognized layer: &#123;&#125;&#x27;</span>.<span class="built_in">format</span>(layer.__class__.__name__))</span><br><span class="line"></span><br><span class="line">        model.add_module(name, layer)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> name <span class="keyword">in</span> content_layers:</span><br><span class="line">            <span class="comment"># add content loss:</span></span><br><span class="line">            target = model(content_img).detach()</span><br><span class="line">            content_loss = ContentLoss(target)</span><br><span class="line">            model.add_module(<span class="string">&quot;content_loss_&#123;&#125;&quot;</span>.<span class="built_in">format</span>(i), content_loss)</span><br><span class="line">            content_losses.append(content_loss)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> name <span class="keyword">in</span> style_layers:</span><br><span class="line">            <span class="comment"># add style loss:</span></span><br><span class="line">            target_feature = model(style_img).detach()</span><br><span class="line">            style_loss = StyleLoss(target_feature)</span><br><span class="line">            model.add_module(<span class="string">&quot;style_loss_&#123;&#125;&quot;</span>.<span class="built_in">format</span>(i), style_loss)</span><br><span class="line">            style_losses.append(style_loss)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># now we trim off the layers after the last content and style losses</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(model) - <span class="number">1</span>, -<span class="number">1</span>, -<span class="number">1</span>):</span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">isinstance</span>(model[i], ContentLoss) <span class="keyword">or</span> <span class="built_in">isinstance</span>(model[i], StyleLoss):</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line"></span><br><span class="line">    model = model[:(i + <span class="number">1</span>)]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> model, style_losses, content_losses</span><br><span class="line"></span><br><span class="line">input_img = content_img.clone()</span><br><span class="line"><span class="comment"># if you want to use white noise instead uncomment the below line:</span></span><br><span class="line"><span class="comment"># input_img = torch.randn(content_img.data.size(), device=device)</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># add the original input image to the figure:</span></span><br><span class="line">plt.figure()</span><br><span class="line">imshow(input_img, title=<span class="string">&#x27;Input Image&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">get_input_optimizer</span>(<span class="params">input_img</span>):</span><br><span class="line">    <span class="comment"># this line to show that input is a parameter that requires a gradient</span></span><br><span class="line">    optimizer = optim.LBFGS([input_img.requires_grad_()])</span><br><span class="line">    <span class="keyword">return</span> optimizer</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">run_style_transfer</span>(<span class="params">cnn, normalization_mean, normalization_std,</span></span><br><span class="line"><span class="params">                       content_img, style_img, input_img, num_steps=<span class="number">300</span>,</span></span><br><span class="line"><span class="params">                       style_weight=<span class="number">1000000</span>, content_weight=<span class="number">1</span></span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;Run the style transfer.&quot;&quot;&quot;</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;Building the style transfer model..&#x27;</span>)</span><br><span class="line">    model, style_losses, content_losses = get_style_model_and_losses(cnn,</span><br><span class="line">        normalization_mean, normalization_std, style_img, content_img)</span><br><span class="line">    optimizer = get_input_optimizer(input_img)</span><br><span class="line"></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;Optimizing..&#x27;</span>)</span><br><span class="line">    run = [<span class="number">0</span>]</span><br><span class="line">    <span class="keyword">while</span> run[<span class="number">0</span>] &lt;= num_steps:</span><br><span class="line"></span><br><span class="line">        <span class="keyword">def</span> <span class="title function_">closure</span>():</span><br><span class="line">            <span class="comment"># correct the values of updated input image</span></span><br><span class="line">            input_img.data.clamp_(<span class="number">0</span>, <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">            optimizer.zero_grad()</span><br><span class="line">            model(input_img)</span><br><span class="line">            style_score = <span class="number">0</span></span><br><span class="line">            content_score = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">            <span class="keyword">for</span> sl <span class="keyword">in</span> style_losses:</span><br><span class="line">                style_score += sl.loss</span><br><span class="line">            <span class="keyword">for</span> cl <span class="keyword">in</span> content_losses:</span><br><span class="line">                content_score += cl.loss</span><br><span class="line"></span><br><span class="line">            style_score *= style_weight</span><br><span class="line">            content_score *= content_weight</span><br><span class="line"></span><br><span class="line">            loss = style_score + content_score</span><br><span class="line">            loss.backward()</span><br><span class="line"></span><br><span class="line">            run[<span class="number">0</span>] += <span class="number">1</span></span><br><span class="line">            <span class="keyword">if</span> run[<span class="number">0</span>] % <span class="number">50</span> == <span class="number">0</span>:</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">&quot;run &#123;&#125;:&quot;</span>.<span class="built_in">format</span>(run))</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">&#x27;Style Loss : &#123;:4f&#125; Content Loss: &#123;:4f&#125;&#x27;</span>.<span class="built_in">format</span>(</span><br><span class="line">                    style_score.item(), content_score.item()))</span><br><span class="line">                <span class="built_in">print</span>()</span><br><span class="line"></span><br><span class="line">            <span class="keyword">return</span> style_score + content_score</span><br><span class="line"></span><br><span class="line">        optimizer.step(closure)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># a last correction...</span></span><br><span class="line">    input_img.data.clamp_(<span class="number">0</span>, <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> input_img</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">output = run_style_transfer(cnn, cnn_normalization_mean, cnn_normalization_std,</span><br><span class="line">                            content_img, style_img, input_img)</span><br><span class="line"></span><br><span class="line">plt.figure()</span><br><span class="line">imshow(output, title=<span class="string">&#x27;Output Image&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># sphinx_gallery_thumbnail_number = 4</span></span><br><span class="line">plt.ioff()</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+
+<h2 id="结果展示"><a href="#结果展示" class="headerlink" title="结果展示"></a>结果展示</h2><p><img src="https://z3.ax1x.com/2021/04/10/cacoRO.png"><br><img src="https://z3.ax1x.com/2021/04/10/cacTzD.png"><br><img src="https://z3.ax1x.com/2021/04/10/cacHQe.png"></p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>Post author:  </strong>Ryan
+  </li>
+  <li class="post-copyright-link">
+    <strong>Post link: </strong>
+    <a href="http://yoursite.com/2022/02/10/Deep%20Learning/Style%20Transfer%20Algorithm/" title="Style Transfer Algorithm --------------------------------------------------------------------------------【Project📂】">http://yoursite.com/2022/02/10/Deep Learning/Style Transfer Algorithm/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/Deep-Learning%F0%9F%93%89/" rel="tag"><i class="fa fa-tag"></i> Deep Learning📉</a>
+          </div>
+
+        
+  <div class="post-widgets">
+    <div class="wp_rating">
+      <div id="wpac-rating"></div>
+    </div>
+  </div>
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/02/04/Machine%20Learning/Regression%20Tree/" rel="prev" title="Regression Tree -----------------------------------------------------------------------------【Mechine Learning💻】">
+      <i class="fa fa-chevron-left"></i> Regression Tree -----------------------------------------------------------------------------【Mechine Learning💻】
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/02/17/Kaggle/Kaggle%20Competition%20Process%20and%20Template/" rel="next" title="Kaggle Competition Process and Template ------------------------------------------------------------【Kaggle🏆】">
+      Kaggle Competition Process and Template ------------------------------------------------------------【Kaggle🏆】 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Style-Transfer-Algorithm"><span class="nav-number">1.</span> <span class="nav-text">Style Transfer Algorithm</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A3%8E%E6%A0%BC%E8%BF%81%E7%A7%BB%E7%AE%97%E6%B3%95%E7%9A%84%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.2.</span> <span class="nav-text">风格迁移算法的原理与实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A3%8E%E6%A0%BC%E8%BF%81%E7%A7%BB%E7%9A%84%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86"><span class="nav-number">1.2.1.</span> <span class="nav-text">风格迁移的基本原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#VGG-19%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.2.2.</span> <span class="nav-text">VGG-19网络模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A3%8E%E6%A0%BC%E8%BF%81%E7%A7%BB%E5%85%B7%E4%BD%93%E5%8E%9F%E7%90%86"><span class="nav-number">1.2.3.</span> <span class="nav-text">风格迁移具体原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%85%E5%AE%B9%E4%BB%A3%E4%BB%B7%E5%87%BD%E6%95%B0"><span class="nav-number">1.2.4.</span> <span class="nav-text">内容代价函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A3%8E%E6%A0%BC%E4%BB%A3%E4%BB%B7%E5%87%BD%E6%95%B0"><span class="nav-number">1.2.5.</span> <span class="nav-text">风格代价函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%9A%84%E4%BB%A3%E4%BB%B7%E5%87%BD%E6%95%B0"><span class="nav-number">1.2.6.</span> <span class="nav-text">总的代价函数</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0%EF%BC%88pytorch%EF%BC%89"><span class="nav-number">1.3.</span> <span class="nav-text">代码实现（pytorch）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E6%9E%9C%E5%B1%95%E7%A4%BA"><span class="nav-number">1.4.</span> <span class="nav-text">结果展示</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Ryan"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">Ryan</p>
+  <div class="site-description" itemprop="description"><font color="#444444">Truth, Goodness and Beauty</font></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">22</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Ryanlzz" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Ryanlzz" rel="noopener" target="_blank"><i class="fa fa-fw fa-fab fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:isliuze@gmail.com" title="E-Mail → mailto:isliuze@gmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-fa fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/people/ryan-91-34" title="ZHIHU → https:&#x2F;&#x2F;www.zhihu.com&#x2F;people&#x2F;ryan-91-34" rel="noopener" target="_blank"><i class="fa fa-fw fa-fab fa-zhihu"></i>ZHIHU</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/atom.xml" title="RSS → &#x2F;atom.xml"><i class="fa fa-fw fa-rss"></i>RSS</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ryan</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a>
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">Theme – <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/pjax/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/medium-zoom@1/dist/medium-zoom.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.getAttribute('pjax') !== null) {
+      element.setAttribute('pjax', '');
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+  <script pjax>
+  if (CONFIG.page.isPost) {
+    wpac_init = window.wpac_init || [];
+    wpac_init.push({
+      widget: 'Rating',
+      id: ,
+      el: 'wpac-rating',
+      color: 'fc6423'
+    });
+    (function() {
+      if ('WIDGETPACK_LOADED' in window) return;
+      WIDGETPACK_LOADED = true;
+      var mc = document.createElement('script');
+      mc.type = 'text/javascript';
+      mc.async = true;
+      mc.src = '//embed.widgetpack.com/widget.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mc, s.nextSibling);
+    })();
+  }
+  </script>
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+
+  
+
+    </div>
+</body>
+</html>

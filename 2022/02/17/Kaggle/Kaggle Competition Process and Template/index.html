@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon1.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon32.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico">
+  <link rel="mask-icon" href="/images/favicon1.png" color="#222">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.loli.net/css?family=Noto Sans Simplified Chinese:300,300italic,400,400italic,700,700italic|Roboto Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('http://yoursite.com').hostname,
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.7.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":true,"show_result":true,"style":"default"},
+    back2top: {"enable":true,"sidebar":true,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: true,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"buttons","active":null,"storage":true,"lazyload":true,"nav":{"disqus":{"text":"Load Disqus","order":-1}}},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":false,"async":true,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="Kaggle competition process and template 理解题目理解题目要干什么，是分类问题还是回归问题，采用什么方式。 准备数据把网站上的数据下载到本地，一共四个文件，训练集，测试集，提交样例和数据描述。 1234# 读入数据train_df &#x3D; pd.read_csv(&amp;#x27;input&#x2F;train.csv&amp;#x27;)test_df &#x3D; pd.read_csv(&amp;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kaggle Competition Process and Template ------------------------------------------------------------【Kaggle🏆】">
+<meta property="og:url" content="http://yoursite.com/2022/02/17/Kaggle/Kaggle%20Competition%20Process%20and%20Template/index.html">
+<meta property="og:site_name" content="Ryan&#39;s Blog">
+<meta property="og:description" content="Kaggle competition process and template 理解题目理解题目要干什么，是分类问题还是回归问题，采用什么方式。 准备数据把网站上的数据下载到本地，一共四个文件，训练集，测试集，提交样例和数据描述。 1234# 读入数据train_df &#x3D; pd.read_csv(&amp;#x27;input&#x2F;train.csv&amp;#x27;)test_df &#x3D; pd.read_csv(&amp;">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://s4.ax1x.com/2022/02/15/H2VzCV.png">
+<meta property="article:published_time" content="2022-02-16T17:19:00.000Z">
+<meta property="article:modified_time" content="2022-06-23T15:54:04.000Z">
+<meta property="article:author" content="Ryan">
+<meta property="article:tag" content="Kaggle🏆">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s4.ax1x.com/2022/02/15/H2VzCV.png">
+
+<link rel="canonical" href="http://yoursite.com/2022/02/17/Kaggle/Kaggle%20Competition%20Process%20and%20Template/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>Kaggle Competition Process and Template ------------------------------------------------------------【Kaggle🏆】 | Ryan's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Ryan's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home🏠">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-desktop"></i>Home🏠</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="Searching..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/02/17/Kaggle/Kaggle%20Competition%20Process%20and%20Template/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="Ryan">
+      <meta itemprop="description" content="<font color="#444444">Truth, Goodness and Beauty</font>">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ryan's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          Kaggle Competition Process and Template ------------------------------------------------------------【Kaggle🏆】
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2022-02-17 01:19:00" itemprop="dateCreated datePublished" datetime="2022-02-17T01:19:00+08:00">2022-02-17</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-06-23 23:54:04" itemprop="dateModified" datetime="2022-06-23T23:54:04+08:00">2022-06-23</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Kaggle-Competitions%F0%9F%8F%86/" itemprop="url" rel="index">
+                    <span itemprop="name">Kaggle Competitions🏆</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Kaggle-competition-process-and-template"><a href="#Kaggle-competition-process-and-template" class="headerlink" title="Kaggle competition process and template"></a>Kaggle competition process and template</h1><p><img src="https://s4.ax1x.com/2022/02/15/H2VzCV.png"></p>
+<h2 id="理解题目"><a href="#理解题目" class="headerlink" title="理解题目"></a>理解题目</h2><p>理解题目要干什么，是分类问题还是回归问题，采用什么方式。</p>
+<h2 id="准备数据"><a href="#准备数据" class="headerlink" title="准备数据"></a>准备数据</h2><p>把网站上的数据下载到本地，一共四个文件，训练集，测试集，提交样例和数据描述。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 读入数据</span></span><br><span class="line">train_df = pd.read_csv(<span class="string">&#x27;input/train.csv&#x27;</span>)</span><br><span class="line">test_df = pd.read_csv(<span class="string">&#x27;input/test.csv&#x27;</span>)</span><br><span class="line">combin = [train_df, test_df]</span><br></pre></td></tr></table></figure>
+
+<h2 id="理解数据"><a href="#理解数据" class="headerlink" title="理解数据"></a>理解数据</h2><p>拿到数据后，导入相应的包分析数据，理解数据。比如数据的条数，有没有缺失的值，数据之间的相关性如何。只有正确的理解了数据才能更好进行下一步的数据清洗工作。有一些包可以很好的可视化数据，比如<strong>seaborn</strong>，还有一个很好用的包是<strong>pandas_profiling</strong>，调用这个包可以生成数据的探测性报告，包括描述性统计和可视化信息，相关性等，但是在数据非常多时显示结果非常耗时，可以选择使用。下面还有一些函数可以显示数据信息。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 生成报告</span></span><br><span class="line"><span class="keyword">import</span> pandas_profiling <span class="keyword">as</span> ppf</span><br><span class="line">ppf.ProfileReport(data)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 数据基本信息</span></span><br><span class="line">data.info()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 数据前5行</span></span><br><span class="line">data.head()</span><br></pre></td></tr></table></figure>
+
+<h2 id="清洗数据"><a href="#清洗数据" class="headerlink" title="清洗数据"></a>清洗数据</h2><p>清洗数据的目的在于删除重复信息，纠正存在的错误，并提供数据一致性，最后得到一个大致可以拿来训练的数据集。</p>
+<p>数据清洗的难点：数据清洗一般针对具体应用，因而难以归纳统一的方法和步骤，但是根据数据不同可以给出相应的数据清理方法：</p>
+<ol>
+<li><p>处理缺失值：解决缺失数据问题的方法主要有：删除和填补，当数据缺失较多，比如缺失了30%以上，可以选择成列剔除，剩下的缺失值可以用一些特殊值填补，比如平均值，众数等等，或者使用算法来预测。</p>
+<ul>
+<li><p>查看缺失值比例</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#查看缺失值所占比列</span></span><br><span class="line">train_df_total = train_df.isnull().<span class="built_in">sum</span>().sort_values(ascending=<span class="literal">False</span>)</span><br><span class="line">train_df_percent=(train_df.isnull().<span class="built_in">sum</span>()/<span class="built_in">len</span>(train_df)).sort_values(ascending=<span class="literal">False</span>)</span><br><span class="line">test_df_total = test_df.isnull().<span class="built_in">sum</span>().sort_values(ascending=<span class="literal">False</span>)</span><br><span class="line">test_df_percent=(test_df.isnull().<span class="built_in">sum</span>()/<span class="built_in">len</span>(test_df)).sort_values(ascending=<span class="literal">False</span>)</span><br><span class="line">type_df = train_df.dtypes</span><br><span class="line">missing_data = pd.concat([train_df_total, train_df_percent, test_df_total, test_df_percent, type_df], axis=<span class="number">1</span>, keys=[<span class="string">&#x27;train__missing&#x27;</span>, <span class="string">&#x27;percent&#x27;</span>,<span class="string">&#x27;test__missing&#x27;</span>,<span class="string">&#x27;percent&#x27;</span>, <span class="string">&#x27;dtype&#x27;</span>])</span><br><span class="line">missing_data[missing_data.<span class="built_in">sum</span>(axis=<span class="number">1</span>,numeric_only=<span class="literal">True</span>) &gt; <span class="number">0</span>]</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>成列删除</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 删除所有含空的行</span></span><br><span class="line">data.dropna(axis=<span class="number">0</span>, inplace=<span class="literal">True</span>)</span><br><span class="line"><span class="comment"># 删除某列含空的列</span></span><br><span class="line">data.dropna(subset=[<span class="string">&#x27;列名&#x27;</span>], axis=<span class="number">1</span>, inplace=<span class="literal">True</span>)</span><br><span class="line"><span class="comment"># 删掉多列</span></span><br><span class="line">drop_column = [<span class="string">&#x27;列名&#x27;</span>,<span class="string">&#x27;列名&#x27;</span>, <span class="string">&#x27;列名&#x27;</span>]</span><br><span class="line">data.drop(drop_column, axis=<span class="number">1</span>, inplace = <span class="literal">True</span>)</span><br><span class="line"><span class="comment"># 删除缺失大于30%的列</span></span><br><span class="line">null_columns = train_df.columns[train_df.isnull().<span class="built_in">sum</span>() &gt; <span class="built_in">len</span>(train_df)*<span class="number">0.3</span>]</span><br><span class="line">train_df.drop(null_columns, axis=<span class="number">1</span>, inplace=<span class="literal">True</span>)</span><br><span class="line">test_df.drop(null_columns, axis=<span class="number">1</span>, inplace=<span class="literal">True</span>)</span><br></pre></td></tr></table></figure></li>
+</ul>
+<ul>
+<li><p>填补缺失值</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 快速填充 数字类型和对象类型</span></span><br><span class="line">df_number = test_df.select_dtypes(include=<span class="string">&#x27;number&#x27;</span>).columns</span><br><span class="line">df_object = test_df.select_dtypes(include=<span class="string">&#x27;object&#x27;</span>).columns</span><br><span class="line"></span><br><span class="line"><span class="comment"># 填补缺失值 数字中平均值 对象型用众数</span></span><br><span class="line"><span class="keyword">for</span> df <span class="keyword">in</span> combin:</span><br><span class="line">    <span class="keyword">for</span> col <span class="keyword">in</span> df_number:</span><br><span class="line">        df[col] = df[col].fillna(df[col].mean())</span><br><span class="line">    <span class="keyword">for</span> col <span class="keyword">in</span> df_object:</span><br><span class="line">        df[col] = df[col].fillna(df[col].mode()[<span class="number">0</span>])</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p>去重：相等的记录合并为一条数据。</p>
+</li>
+<li><p>解决异常值：解决掉一些不符合实际的数值，可以用统计分析方法，或者根据业务规则来检查数据值。</p>
+</li>
+<li><p>数据的不一致性：比如类别型或者次序型</p>
+</li>
+</ol>
+<h2 id="数据转换"><a href="#数据转换" class="headerlink" title="数据转换"></a>数据转换</h2><ol>
+<li>把一个列里面的数值的最小值与最大值都限定到一个固定区间内，然后把所有的元素只通过线性变化出来【将数据的单位放到合理的区间】</li>
+<li>Z-score 一个更常见的算法：通过算法使得均值变为0，方差变为1</li>
+<li>把一列的数据换成是-1到1之间的数据</li>
+<li>对数值都是大于0，且数值变换比较大可以试一下log一下【log上面的加减等于原始数据的乘除，可以将计算基于百分比的】。</li>
+</ol>
+<h2 id="特征工程"><a href="#特征工程" class="headerlink" title="特征工程"></a>特征工程</h2><p>超级重要的一部分，根据特征之间和特征与目标变量之间的相关性对特征进行选择，组合，删除。</p>
+<ol>
+<li>对于整型或浮点型的数据，可以直接用或者是把最大最小值拿出来，再把这个数据分成n个区间，如果值在区间中，则会给它对应区间的下标i，这样可以让机器学习算法不去纠结一个具体的值（细粒度的值）</li>
+<li>对于类别的数据，一般采用one-hot（独热）编码（虽然有n列，但是只有每一列有值），虽然有很多的类别但是常见的只有几个类，可以将少数的类别变成不确定的类别，只保留那些比较重要的类别，这样可以把这些重要的类别放到可控的单元内。</li>
+<li>对于时间的特征，将时间的数据弄成机器学习算法能知道这些天数中是有特殊意义的日子（周末、休息日、新年之类的）</li>
+<li>特征组合：这样子能拿到两两特征之间相关性的东西</li>
+</ol>
+<h2 id="评估算法"><a href="#评估算法" class="headerlink" title="评估算法"></a>评估算法</h2><h3 id="数据集划分"><a href="#数据集划分" class="headerlink" title="数据集划分"></a>数据集划分</h3><p>这一部分，可以使用随机划分，或者是随机抽样，分层抽样等，sklearn都有相应的库函数进行调用， 分离完训练集和测试集之后，测试集放在一边不用管，拿训练集进行下面的模型评估</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 划分训练集和测试集</span></span><br><span class="line">X_train = train_df_dummy.drop(<span class="string">&#x27;SalePrice&#x27;</span>, axis=<span class="number">1</span>)</span><br><span class="line">Y_train = train_df_dummy[<span class="string">&#x27;SalePrice&#x27;</span>]</span><br><span class="line">X_test = test_df_dummy.copy()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 标准化</span></span><br><span class="line">X_train = StandardScaler().fit_transform(X_train)</span><br><span class="line">X_test = StandardScaler().fit_transform(X_test)</span><br><span class="line"></span><br><span class="line">X_train.shape, Y_train.shape, X_test.shape</span><br></pre></td></tr></table></figure>
+
+<h3 id="评估模型"><a href="#评估模型" class="headerlink" title="评估模型"></a>评估模型</h3><p>可以先尝试几个基本的模型，然后可以选出其中表现较好的几个做模型融合，下面是两个模板，一个分类，一个回归，可以直接套用。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 分类算法</span></span><br><span class="line"><span class="comment"># Cross validate model with Kfold stratified cross val</span></span><br><span class="line">kfold = StratifiedKFold(n_splits=<span class="number">10</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Modeling step Test differents algorithms </span></span><br><span class="line">classifiers = []</span><br><span class="line">classifiers.append(SVC())</span><br><span class="line">classifiers.append(DecisionTreeClassifier())</span><br><span class="line">classifiers.append(AdaBoostClassifier(DecisionTreeClassifier(),learning_rate=<span class="number">0.1</span>))</span><br><span class="line">classifiers.append(RandomForestClassifier())</span><br><span class="line">classifiers.append(ExtraTreesClassifier())</span><br><span class="line">classifiers.append(GradientBoostingClassifier())</span><br><span class="line">classifiers.append(MLPClassifier())</span><br><span class="line">classifiers.append(KNeighborsClassifier())</span><br><span class="line">classifiers.append(LogisticRegression())</span><br><span class="line">classifiers.append(LinearDiscriminantAnalysis())</span><br><span class="line">classifiers.append(XGBClassifier())</span><br><span class="line"></span><br><span class="line">cv_results = []</span><br><span class="line"><span class="keyword">for</span> classifier <span class="keyword">in</span> classifiers :</span><br><span class="line">    cv_results.append(cross_val_score(classifier, X_train, y = Y_train, scoring = <span class="string">&quot;accuracy&quot;</span>, cv = kfold, n_jobs=<span class="number">4</span>))</span><br><span class="line"></span><br><span class="line">cv_means = []</span><br><span class="line">cv_std = []</span><br><span class="line"><span class="keyword">for</span> cv_result <span class="keyword">in</span> cv_results:</span><br><span class="line">    cv_means.append(cv_result.mean())</span><br><span class="line">    cv_std.append(cv_result.std())</span><br><span class="line"></span><br><span class="line">cv_res = pd.DataFrame(&#123;<span class="string">&quot;CrossValMeans&quot;</span>:cv_means,<span class="string">&quot;CrossValerrors&quot;</span>: cv_std,<span class="string">&quot;Algorithm&quot;</span>:[<span class="string">&quot;SVC&quot;</span>,<span class="string">&quot;DecisionTree&quot;</span>,<span class="string">&quot;AdaBoost&quot;</span>,</span><br><span class="line"><span class="string">&quot;RandomForest&quot;</span>,<span class="string">&quot;ExtraTrees&quot;</span>,<span class="string">&quot;GradientBoosting&quot;</span>,<span class="string">&quot;MultipleLayerPerceptron&quot;</span>,<span class="string">&quot;KNeighboors&quot;</span>,<span class="string">&quot;LogisticRegression&quot;</span>,<span class="string">&quot;LinearDiscriminantAnalysis&quot;</span>,<span class="string">&quot;XGBClassifier&quot;</span>]&#125;)</span><br><span class="line"></span><br><span class="line">cv_res.sort_values(by=[<span class="string">&quot;CrossValMeans&quot;</span>], ascending=<span class="literal">False</span>, inplace=<span class="literal">True</span>)</span><br><span class="line">g = sns.barplot(x=<span class="string">&quot;CrossValMeans&quot;</span>,y=<span class="string">&quot;Algorithm&quot;</span>, data=cv_res,palette=<span class="string">&quot;Set3&quot;</span>,orient = <span class="string">&quot;h&quot;</span>,**&#123;<span class="string">&#x27;xerr&#x27;</span>:cv_std&#125;)</span><br><span class="line">g.set_xlabel(<span class="string">&quot;Mean Accuracy&quot;</span>)</span><br><span class="line">g = g.set_title(<span class="string">&quot;Cross validation scores&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 回归算法</span></span><br><span class="line"><span class="comment"># Cross validate model with Kfold stratified cross val</span></span><br><span class="line">kf = KFold(n_splits=<span class="number">10</span>, random_state=<span class="number">42</span>, shuffle=<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Modeling step Test differents algorithms </span></span><br><span class="line">Regressors = []</span><br><span class="line">Regressors.append(ElasticNet())</span><br><span class="line">Regressors.append(Lasso())</span><br><span class="line">Regressors.append(BayesianRidge())</span><br><span class="line">Regressors.append(LassoLarsIC())</span><br><span class="line">Regressors.append(RandomForestRegressor())</span><br><span class="line">Regressors.append(GradientBoostingRegressor())</span><br><span class="line">Regressors.append(KernelRidge())</span><br><span class="line">Regressors.append(SVR())</span><br><span class="line">Regressors.append(LGBMRegressor())</span><br><span class="line">Regressors.append(XGBRegressor())</span><br><span class="line"></span><br><span class="line">cv_results = []</span><br><span class="line"><span class="keyword">for</span> regressor <span class="keyword">in</span> Regressors:</span><br><span class="line">    cv_results.append(np.sqrt(-cross_val_score(regressor, X_train, Y_train, scoring = <span class="string">&quot;neg_mean_squared_error&quot;</span>, cv = kf, n_jobs=-<span class="number">1</span>)))</span><br><span class="line"></span><br><span class="line">cv_means = []</span><br><span class="line">cv_std = []</span><br><span class="line"><span class="keyword">for</span> cv_result <span class="keyword">in</span> cv_results:</span><br><span class="line">    cv_means.append(cv_result.mean())</span><br><span class="line">    cv_std.append(cv_result.std())</span><br><span class="line"></span><br><span class="line">cv_res = pd.DataFrame(&#123;<span class="string">&quot;CrossValMeans&quot;</span>:cv_means,<span class="string">&quot;CrossValerrors&quot;</span>: cv_std,<span class="string">&quot;Algorithm&quot;</span>:[<span class="string">&quot;ElasticNet&quot;</span>,<span class="string">&quot;Lasso&quot;</span>,<span class="string">&quot;BayesianRidge&quot;</span>,</span><br><span class="line"><span class="string">&quot;LassoLarsIC&quot;</span>,<span class="string">&quot;RandomForest&quot;</span>,<span class="string">&quot;GradientBoosting&quot;</span>,<span class="string">&quot;KernelRidge&quot;</span>,<span class="string">&quot;SVR&quot;</span>,<span class="string">&quot;LGBMRegressor&quot;</span>,<span class="string">&quot;XGBRegressor&quot;</span>]&#125;)</span><br><span class="line"></span><br><span class="line">cv_res.sort_values(by=[<span class="string">&quot;CrossValMeans&quot;</span>], ascending=<span class="literal">False</span>, inplace=<span class="literal">True</span>)</span><br><span class="line">g = sns.barplot(x=<span class="string">&quot;CrossValMeans&quot;</span>,y=<span class="string">&quot;Algorithm&quot;</span>, data=cv_res,palette=<span class="string">&quot;Set3&quot;</span>,orient = <span class="string">&quot;h&quot;</span>,**&#123;<span class="string">&#x27;xerr&#x27;</span>:cv_std&#125;)</span><br><span class="line">g.set_xlabel(<span class="string">&quot;Mean Accuracy&quot;</span>)</span><br><span class="line">g = g.set_title(<span class="string">&quot;Cross validation scores&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<h2 id="优化模型"><a href="#优化模型" class="headerlink" title="优化模型"></a>优化模型</h2><h3 id="算法调参"><a href="#算法调参" class="headerlink" title="算法调参"></a>算法调参</h3><p>从上面表现比较好的模型中选出2-3个，可以尝试进行合理的参数搜索，找到合适的参数。</p>
+<h3 id="模型融合"><a href="#模型融合" class="headerlink" title="模型融合"></a>模型融合</h3><p>现在的比赛中，用一种算法是不行的，需要几种模型放在一块集成或者堆叠等， 其实XGB，lightgbm，Adaboost等都是一些直接封装好的集成方法，但是现在在这个的基础上还有了一些新的集成和堆叠或者模型融合的技术。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/83173703">https://zhuanlan.zhihu.com/p/83173703</a></li>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/137175585">https://zhuanlan.zhihu.com/p/137175585</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1Xh411p7M9/?spm_id_from=333.788">https://www.bilibili.com/video/BV1Xh411p7M9/?spm_id_from=333.788</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/pearl8899/article/details/82145480?spm=1001.2101.3001.6650.2&amp;utm_medium=distribute.pc_relevant.none-task-blog-2~default~CTRLIST~Rate-2.pc_relevant_default&amp;depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~CTRLIST~Rate-2.pc_relevant_default&amp;utm_relevant_index=4">https://blog.csdn.net/pearl8899/article/details/82145480?spm=1001.2101.3001.6650.2&amp;utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-2.pc_relevant_default&amp;depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-2.pc_relevant_default&amp;utm_relevant_index=4</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>Post author:  </strong>Ryan
+  </li>
+  <li class="post-copyright-link">
+    <strong>Post link: </strong>
+    <a href="http://yoursite.com/2022/02/17/Kaggle/Kaggle%20Competition%20Process%20and%20Template/" title="Kaggle Competition Process and Template ------------------------------------------------------------【Kaggle🏆】">http://yoursite.com/2022/02/17/Kaggle/Kaggle Competition Process and Template/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/Kaggle%F0%9F%8F%86/" rel="tag"><i class="fa fa-tag"></i> Kaggle🏆</a>
+          </div>
+
+        
+  <div class="post-widgets">
+    <div class="wp_rating">
+      <div id="wpac-rating"></div>
+    </div>
+  </div>
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/02/10/Deep%20Learning/Style%20Transfer%20Algorithm/" rel="prev" title="Style Transfer Algorithm --------------------------------------------------------------------------------【Project📂】">
+      <i class="fa fa-chevron-left"></i> Style Transfer Algorithm --------------------------------------------------------------------------------【Project📂】
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/02/20/Kaggle/House%20Prices%20-%20Advanced%20Regression%20Techniques/" rel="next" title="House Prices - Advanced Regression Techniques ------------------------------------------------------【Kaggle🏆】">
+      House Prices - Advanced Regression Techniques ------------------------------------------------------【Kaggle🏆】 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Kaggle-competition-process-and-template"><span class="nav-number">1.</span> <span class="nav-text">Kaggle competition process and template</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%90%86%E8%A7%A3%E9%A2%98%E7%9B%AE"><span class="nav-number">1.1.</span> <span class="nav-text">理解题目</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%87%86%E5%A4%87%E6%95%B0%E6%8D%AE"><span class="nav-number">1.2.</span> <span class="nav-text">准备数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%90%86%E8%A7%A3%E6%95%B0%E6%8D%AE"><span class="nav-number">1.3.</span> <span class="nav-text">理解数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B8%85%E6%B4%97%E6%95%B0%E6%8D%AE"><span class="nav-number">1.4.</span> <span class="nav-text">清洗数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E8%BD%AC%E6%8D%A2"><span class="nav-number">1.5.</span> <span class="nav-text">数据转换</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%89%B9%E5%BE%81%E5%B7%A5%E7%A8%8B"><span class="nav-number">1.6.</span> <span class="nav-text">特征工程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%84%E4%BC%B0%E7%AE%97%E6%B3%95"><span class="nav-number">1.7.</span> <span class="nav-text">评估算法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E9%9B%86%E5%88%92%E5%88%86"><span class="nav-number">1.7.1.</span> <span class="nav-text">数据集划分</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%84%E4%BC%B0%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.7.2.</span> <span class="nav-text">评估模型</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BC%98%E5%8C%96%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.8.</span> <span class="nav-text">优化模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E8%B0%83%E5%8F%82"><span class="nav-number">1.8.1.</span> <span class="nav-text">算法调参</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A8%A1%E5%9E%8B%E8%9E%8D%E5%90%88"><span class="nav-number">1.8.2.</span> <span class="nav-text">模型融合</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">1.9.</span> <span class="nav-text">参考</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Ryan"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">Ryan</p>
+  <div class="site-description" itemprop="description"><font color="#444444">Truth, Goodness and Beauty</font></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">22</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Ryanlzz" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Ryanlzz" rel="noopener" target="_blank"><i class="fa fa-fw fa-fab fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:isliuze@gmail.com" title="E-Mail → mailto:isliuze@gmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-fa fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/people/ryan-91-34" title="ZHIHU → https:&#x2F;&#x2F;www.zhihu.com&#x2F;people&#x2F;ryan-91-34" rel="noopener" target="_blank"><i class="fa fa-fw fa-fab fa-zhihu"></i>ZHIHU</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/atom.xml" title="RSS → &#x2F;atom.xml"><i class="fa fa-fw fa-rss"></i>RSS</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ryan</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a>
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">Theme – <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/pjax/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/medium-zoom@1/dist/medium-zoom.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.getAttribute('pjax') !== null) {
+      element.setAttribute('pjax', '');
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+  <script pjax>
+  if (CONFIG.page.isPost) {
+    wpac_init = window.wpac_init || [];
+    wpac_init.push({
+      widget: 'Rating',
+      id: ,
+      el: 'wpac-rating',
+      color: 'fc6423'
+    });
+    (function() {
+      if ('WIDGETPACK_LOADED' in window) return;
+      WIDGETPACK_LOADED = true;
+      var mc = document.createElement('script');
+      mc.type = 'text/javascript';
+      mc.async = true;
+      mc.src = '//embed.widgetpack.com/widget.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mc, s.nextSibling);
+    })();
+  }
+  </script>
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+
+  
+
+    </div>
+</body>
+</html>

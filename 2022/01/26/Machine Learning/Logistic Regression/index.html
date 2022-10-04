@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon1.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon32.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico">
+  <link rel="mask-icon" href="/images/favicon1.png" color="#222">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.loli.net/css?family=Noto Sans Simplified Chinese:300,300italic,400,400italic,700,700italic|Roboto Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('http://yoursite.com').hostname,
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.7.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":true,"show_result":true,"style":"default"},
+    back2top: {"enable":true,"sidebar":true,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: true,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"buttons","active":null,"storage":true,"lazyload":true,"nav":{"disqus":{"text":"Load Disqus","order":-1}}},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":false,"async":true,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="Logistic Regression逻辑斯谛回归（logistic regression）是统计学习中的经典分类方法，属于对数线性模型。 逻辑斯谛分布Logistic 分布是一种连续型的概率分布，其分布函数和密度函数分别为：$$F(x)&#x3D;P(X \leq x)&#x3D;\frac{1}{1+e^{-(x-\mu) &#x2F; \gamma}}$$ $$f(x)&#x3D;F^{\p">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Logistic Regression --------------------------------------------------------------------------【Mechine Learning💻】">
+<meta property="og:url" content="http://yoursite.com/2022/01/26/Machine%20Learning/Logistic%20Regression/index.html">
+<meta property="og:site_name" content="Ryan&#39;s Blog">
+<meta property="og:description" content="Logistic Regression逻辑斯谛回归（logistic regression）是统计学习中的经典分类方法，属于对数线性模型。 逻辑斯谛分布Logistic 分布是一种连续型的概率分布，其分布函数和密度函数分别为：$$F(x)&#x3D;P(X \leq x)&#x3D;\frac{1}{1+e^{-(x-\mu) &#x2F; \gamma}}$$ $$f(x)&#x3D;F^{\p">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://z3.ax1x.com/2021/03/29/cCN1zt.png">
+<meta property="article:published_time" content="2022-01-25T17:18:00.000Z">
+<meta property="article:modified_time" content="2022-06-23T15:30:04.000Z">
+<meta property="article:author" content="Ryan">
+<meta property="article:tag" content="Mechine Learning💻">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://z3.ax1x.com/2021/03/29/cCN1zt.png">
+
+<link rel="canonical" href="http://yoursite.com/2022/01/26/Machine%20Learning/Logistic%20Regression/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>Logistic Regression --------------------------------------------------------------------------【Mechine Learning💻】 | Ryan's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Ryan's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home🏠">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-desktop"></i>Home🏠</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="Searching..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/01/26/Machine%20Learning/Logistic%20Regression/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="Ryan">
+      <meta itemprop="description" content="<font color="#444444">Truth, Goodness and Beauty</font>">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ryan's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          Logistic Regression --------------------------------------------------------------------------【Mechine Learning💻】
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2022-01-26 01:18:00" itemprop="dateCreated datePublished" datetime="2022-01-26T01:18:00+08:00">2022-01-26</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-06-23 23:30:04" itemprop="dateModified" datetime="2022-06-23T23:30:04+08:00">2022-06-23</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Mechine-Learning%F0%9F%92%BB/" itemprop="url" rel="index">
+                    <span itemprop="name">Mechine Learning💻</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Logistic-Regression"><a href="#Logistic-Regression" class="headerlink" title="Logistic Regression"></a>Logistic Regression</h1><p>逻辑斯谛回归（logistic regression）是统计学习中的经典分类方法，属于对数线性模型。</p>
+<h2 id="逻辑斯谛分布"><a href="#逻辑斯谛分布" class="headerlink" title="逻辑斯谛分布"></a>逻辑斯谛分布</h2><p>Logistic 分布是一种连续型的概率分布，其<strong>分布函数</strong>和<strong>密度函数</strong>分别为：<br>$$<br>F(x)&#x3D;P(X \leq x)&#x3D;\frac{1}{1+e^{-(x-\mu) &#x2F; \gamma}}<br>$$</p>
+<p>$$<br>f(x)&#x3D;F^{\prime}(X \leq x)&#x3D;\frac{e^{-(x-\mu) &#x2F; \gamma}}{\gamma\left(1+e^{-(x-\mu) &#x2F; \gamma}\right)^{2}}<br>$$</p>
+<p>其中，$\mu$ 表示位置参数，$\gamma0$ 为形状参数。我们可以看下其图像特征：</p>
+<p><img src="https://z3.ax1x.com/2021/03/29/cCN1zt.png"></p>
+<p>Logistic 分布是由其位置和尺度参数定义的连续分布。Logistic 分布的形状与正态分布的形状相似，但是 Logistic 分布的尾部更长，所以我们可以使用 Logistic 分布来建模比正态分布具有更长尾部和更高波峰的数据分布。在深度学习中常用到的 Sigmoid 函数就是 Logistic 的分布函数在$\mu &#x3D; 0$，$\gamma0$的特殊形式。</p>
+<h2 id="二项逻辑斯谛回归模型"><a href="#二项逻辑斯谛回归模型" class="headerlink" title="二项逻辑斯谛回归模型"></a>二项逻辑斯谛回归模型</h2><p>二项逻辑斯谛回归模型是如下的条件概率分布：<br>$$<br>P(Y&#x3D;1 \mid x)&#x3D;\frac{\exp (w \cdot x+b)}{1+\exp (w \cdot x+b)}<br>$$</p>
+<p>$$<br>P(Y&#x3D;0 \mid x)&#x3D;\frac{1}{1+\exp (w \cdot x+b)}<br>$$</p>
+<p>逻辑斯谛回归比较以上两个条件概率值的大小，将实例$x$分到概率值较大的那一类。函线性函数的值越接近正无穷，概率值就越接近1，线性函数越接近负无穷，概率值越接近0.</p>
+<h2 id="模型参数估计"><a href="#模型参数估计" class="headerlink" title="模型参数估计"></a>模型参数估计</h2><p>应用极大似然估计法估计模型参数</p>
+<p>设：<br>$$<br>P(Y&#x3D;1 \mid x)&#x3D;\pi(x), \quad P(Y&#x3D;0 \mid x)&#x3D;1-\pi(x)<br>$$<br>似然函数 为：<br>$$<br>\prod_{i&#x3D;1}^{N}\left[\pi\left(x_{i}\right)\right]^{y_{i}}\left[1-\pi\left(x_{i}\right)\right]^{1-y_{i}}<br>$$<br>对数似然函数为：<br>$$<br>\begin{aligned}<br>L(w) &amp;&#x3D;\sum_{i&#x3D;1}^{N}\left[y_{i} \log \pi\left(x_{i}\right)+\left(1-y_{i}\right) \log \left(1-\pi\left(x_{i}\right)\right)\right] \<br>&amp;&#x3D;\sum_{i&#x3D;1}^{N}\left[y_{i} \log \frac{\pi\left(x_{i}\right)}{1-\pi\left(x_{i}\right)}+\log \left(1-\pi\left(x_{i}\right)\right)\right] \<br>&amp;&#x3D;\sum_{i&#x3D;1}^{N}\left[y_{i}\left(w \cdot x_{i}\right)-\log \left(1+\exp \left(w \cdot x_{i}\right)\right]\right.<br>\end{aligned}<br>$$<br>对$L(w)$求极大值，得到$w$的估计值。可以看出这是一个优化问题，可以采用梯度上升的方法求极大值。</p>
+<h2 id="多项逻辑斯谛回归"><a href="#多项逻辑斯谛回归" class="headerlink" title="多项逻辑斯谛回归"></a>多项逻辑斯谛回归</h2><p>$$<br>P(Y&#x3D;k \mid x)&#x3D;\frac{\exp \left(w_{k} \cdot x\right)}{1+\sum_{k&#x3D;1}^{K-1} \exp \left(w_{k} \cdot x\right)}, \quad k&#x3D;1,2, \cdots, K-1<br>$$</p>
+<p>$$<br>P(Y&#x3D;K \mid x)&#x3D;\frac{1}{1+\sum_{k&#x3D;1}^{K-1} \exp \left(w_{k} \cdot x\right)}<br>$$</p>
+<h2 id="完整公式推导"><a href="#完整公式推导" class="headerlink" title="完整公式推导"></a>完整公式推导</h2><p>分布函数使用<strong>sigmoid</strong>函数<br>$$<br>g(z)&#x3D;\frac{1}{1+e^{-z}}<br>$$</p>
+<p>$$<br>\begin{aligned}<br>g^{\prime}(z) &amp;&#x3D;\frac{d}{d z} \frac{1}{1+e^{-z}} \<br>&amp;&#x3D;\frac{1}{\left(1+e^{-z}\right)^{2}}\left(e^{-z}\right) \<br>&amp;&#x3D;\frac{1}{\left(1+e^{-z}\right)} \cdot\left(1-\frac{1}{\left(1+e^{-z}\right)}\right) \<br>&amp;&#x3D;g(z)(1-g(z))<br>\end{aligned}<br>$$</p>
+<p>模型为：<br>$$<br>\mathrm{h}<em>{\theta}(\mathrm{x})&#x3D;\mathrm{g}\left(\theta^{\mathrm{T}} \mathrm{x}\right)&#x3D;\frac{1}{1+e^{-\theta^{T} x}}<br>$$<br>假设：<br>$$<br>\mathrm{P}(\mathrm{y}&#x3D;1 \mid \mathrm{x} ; \theta)&#x3D;\mathrm{h}</em>{\theta}(\mathrm{x})<br>$$</p>
+<p>$$<br>\mathrm{P}(\mathrm{y}&#x3D;0 \mid \mathrm{x} ; \theta)&#x3D;1-\mathrm{h}_{\theta}(\mathrm{x})<br>$$</p>
+<p>合并简化为：<br>$$<br>\mathrm{p}(\mathrm{y} \mid \mathrm{x} ; \theta)&#x3D;\left(\mathrm{h}<em>{\theta}(\mathrm{x})\right)^{\mathrm{y}}\left(1-\mathrm{h}</em>{\theta}(\mathrm{x})\right)^{1-\mathrm{y}}<br>$$<br>假设 m 个训练样本都是各自独立生成的，那么就可以按如下的方式来写参数的似然函数：<br>$$<br>\begin{aligned}<br>\mathrm{L}(\theta) &amp;&#x3D;\mathrm{p}(\overrightarrow{\mathrm{y}} \mid \mathrm{X} ; \theta) \<br>&amp;&#x3D;\prod_{\mathrm{i}&#x3D;1}^{\mathrm{m}} \mathrm{p}\left(\mathrm{y}^{(\mathrm{i})} \mid \mathrm{x}^{(\mathrm{i})} ; \theta\right) \<br>&amp;&#x3D;\prod_{\mathrm{i}&#x3D;1}^{\mathrm{m}}\left(\mathrm{h}<em>{\theta}\left(\mathrm{x}^{(\mathrm{i})}\right)\right)^{\mathrm{y}^{(\mathrm{i})}}\left(1-\mathrm{h}</em>{\theta}\left(\mathrm{x}^{(\mathrm{i})}\right)\right)^{1-\mathrm{y}^{(\mathrm{i})}}<br>\end{aligned}<br>$$<br>取个对数计算最大值：<br>$$<br>\begin{aligned}<br>\mathrm{l}(\theta) &amp;&#x3D;\log \mathrm{L}(\theta) \<br>&amp;&#x3D;\sum_{\mathrm{i}&#x3D;1}^{\mathrm{m}} \mathrm{y}^{(\mathrm{i})} \log \mathrm{h}\left(\mathrm{x}^{(\mathrm{i})}\right)+\left(1-\mathrm{y}^{(\mathrm{i})}\right) \log \left(1-\mathrm{h}\left(\mathrm{x}^{(\mathrm{i})}\right)\right)<br>\end{aligned}<br>$$<br>采用梯度上升的方法来逼近极大值：$\theta:&#x3D;\theta+\alpha \nabla_{\theta} l(\theta)$<br>$$<br>\begin{aligned}<br>\frac{\partial}{\partial \theta_{j}} l(\theta) &amp;&#x3D;\left(y \frac{1}{g\left(\theta^{T} x\right)}-(1-y) \frac{1}{1-g\left(\theta^{T} x\right)}\right) \frac{\partial}{\partial \theta_{j}} g\left(\theta^{T} x\right) \<br>&amp;&#x3D;\left(y \frac{1}{g\left(\theta^{T} x\right)}-(1-y) \frac{1}{1-g\left(\theta^{T} x\right)}\right) g\left(\theta^{T} x\right)\left(1-g\left(\theta^{T} x\right)\right) \frac{\partial}{\partial \theta_{j}} \theta^{T} x \<br>&amp;&#x3D;\left(y\left(1-g\left(\theta^{T} x\right)\right)-(1-y) g\left(\theta^{T} x\right)\right) x_{j} \<br>&amp;&#x3D;\left(y-h_{\theta}(x)\right) x_{j}<br>\end{aligned}<br>$$<br>然后就得到了随机梯度上升规则：<br>$$<br>\theta_{\mathrm{j}}:&#x3D;\theta_{\mathrm{j}}+\alpha\left(\mathrm{y}^{(\mathrm{i})}-\mathrm{h}<em>{\theta}\left(\mathrm{x}^{(\mathrm{i})}\right)\right) \mathrm{x}</em>{\mathrm{j}}^{(\mathrm{i})}<br>$$</p>
+<h2 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h2><h3 id="按原理实现"><a href="#按原理实现" class="headerlink" title="按原理实现"></a>按原理实现</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> math <span class="keyword">import</span> exp</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> sklearn.datasets <span class="keyword">import</span> load_iris</span><br><span class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split</span><br><span class="line"></span><br><span class="line"><span class="comment"># data</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">create_data</span>():</span><br><span class="line">    iris = load_iris()</span><br><span class="line">    df = pd.DataFrame(iris.data, columns=iris.feature_names)</span><br><span class="line">    df[<span class="string">&#x27;label&#x27;</span>] = iris.target</span><br><span class="line">    df.columns = [<span class="string">&#x27;sepal length&#x27;</span>, <span class="string">&#x27;sepal width&#x27;</span>, <span class="string">&#x27;petal length&#x27;</span>, <span class="string">&#x27;petal width&#x27;</span>, <span class="string">&#x27;label&#x27;</span>]</span><br><span class="line">    data = np.array(df.iloc[:<span class="number">100</span>, [<span class="number">0</span>,<span class="number">1</span>,-<span class="number">1</span>]])</span><br><span class="line">    <span class="comment"># print(data)</span></span><br><span class="line">    <span class="keyword">return</span> data[:,:<span class="number">2</span>], data[:,-<span class="number">1</span>]</span><br><span class="line"></span><br><span class="line">X, y = create_data()</span><br><span class="line">X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=<span class="number">0.3</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">LogisticReressionClassifier</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, max_iter=<span class="number">200</span>, learning_rate=<span class="number">0.01</span></span>):</span><br><span class="line">        self.max_iter = max_iter</span><br><span class="line">        self.learning_rate = learning_rate</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">sigmoid</span>(<span class="params">self, x</span>):</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span> / (<span class="number">1</span> + exp(-x))</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">data_matrix</span>(<span class="params">self, X</span>):</span><br><span class="line">        data_mat = []</span><br><span class="line">        <span class="keyword">for</span> d <span class="keyword">in</span> X:</span><br><span class="line">            data_mat.append([<span class="number">1.0</span>, *d])</span><br><span class="line">        <span class="keyword">return</span> data_mat</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">fit</span>(<span class="params">self, X, y</span>):</span><br><span class="line">        <span class="comment"># label = np.mat(y)</span></span><br><span class="line">        data_mat = self.data_matrix(X)  <span class="comment"># m*n</span></span><br><span class="line">        self.weights = np.zeros((<span class="built_in">len</span>(data_mat[<span class="number">0</span>]), <span class="number">1</span>), dtype=np.float32)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> iter_ <span class="keyword">in</span> <span class="built_in">range</span>(self.max_iter):</span><br><span class="line">            <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(X)):</span><br><span class="line">                result = self.sigmoid(np.dot(data_mat[i], self.weights))</span><br><span class="line">                error = y[i] - result</span><br><span class="line">                self.weights += self.learning_rate * error * np.transpose([data_mat[i]])</span><br><span class="line"></span><br><span class="line">    <span class="comment"># def f(self, x):</span></span><br><span class="line">    <span class="comment">#     return -(self.weights[0] + self.weights[1] * x) / self.weights[2]</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">score</span>(<span class="params">self, X_test, y_test</span>):</span><br><span class="line">        right = <span class="number">0</span></span><br><span class="line">        X_test = self.data_matrix(X_test)</span><br><span class="line">        <span class="keyword">for</span> x, y <span class="keyword">in</span> <span class="built_in">zip</span>(X_test, y_test):</span><br><span class="line">            result = np.dot(x, self.weights)</span><br><span class="line">            <span class="keyword">if</span> (result <span class="number">0</span> <span class="keyword">and</span> y == <span class="number">1</span>) <span class="keyword">or</span> (result &lt; <span class="number">0</span> <span class="keyword">and</span> y == <span class="number">0</span>):</span><br><span class="line">                right += <span class="number">1</span></span><br><span class="line">        <span class="keyword">return</span> right / <span class="built_in">len</span>(X_test)</span><br><span class="line"></span><br><span class="line">lr_clf = LogisticReressionClassifier()</span><br><span class="line">lr_clf.fit(X_train, y_train)</span><br><span class="line"><span class="built_in">print</span>(lr_clf.score(X_test, y_test))</span><br></pre></td></tr></table></figure>
+
+<h3 id="sk-learn-实现"><a href="#sk-learn-实现" class="headerlink" title="sk-learn 实现"></a>sk-learn 实现</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">from</span> sklearn.datasets <span class="keyword">import</span> load_iris</span><br><span class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split</span><br><span class="line"><span class="keyword">from</span> sklearn.linear_model <span class="keyword">import</span> LogisticRegression</span><br><span class="line"></span><br><span class="line"><span class="comment"># data</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">create_data</span>():</span><br><span class="line">    iris = load_iris()</span><br><span class="line">    df = pd.DataFrame(iris.data, columns=iris.feature_names)</span><br><span class="line">    df[<span class="string">&#x27;label&#x27;</span>] = iris.target</span><br><span class="line">    df.columns = [<span class="string">&#x27;sepal length&#x27;</span>, <span class="string">&#x27;sepal width&#x27;</span>, <span class="string">&#x27;petal length&#x27;</span>, <span class="string">&#x27;petal width&#x27;</span>, <span class="string">&#x27;label&#x27;</span>]</span><br><span class="line">    data = np.array(df.iloc[:<span class="number">100</span>, [<span class="number">0</span>,<span class="number">1</span>,-<span class="number">1</span>]])</span><br><span class="line">    <span class="comment"># print(data)</span></span><br><span class="line">    <span class="keyword">return</span> data[:,:<span class="number">2</span>], data[:,-<span class="number">1</span>]</span><br><span class="line"></span><br><span class="line">X, y = create_data()</span><br><span class="line">X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=<span class="number">0.3</span>)</span><br><span class="line"></span><br><span class="line">clf = LogisticRegression(max_iter=<span class="number">200</span>)</span><br><span class="line"></span><br><span class="line">clf.fit(X_train, y_train)</span><br><span class="line"></span><br><span class="line">x_ponits = np.arange(<span class="number">4</span>, <span class="number">8</span>)</span><br><span class="line">y_ = -(clf.coef_[<span class="number">0</span>][<span class="number">0</span>]*x_ponits + clf.intercept_)/clf.coef_[<span class="number">0</span>][<span class="number">1</span>]</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>Post author:  </strong>Ryan
+  </li>
+  <li class="post-copyright-link">
+    <strong>Post link: </strong>
+    <a href="http://yoursite.com/2022/01/26/Machine%20Learning/Logistic%20Regression/" title="Logistic Regression --------------------------------------------------------------------------【Mechine Learning💻】">http://yoursite.com/2022/01/26/Machine Learning/Logistic Regression/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/Mechine-Learning%F0%9F%92%BB/" rel="tag"><i class="fa fa-tag"></i> Mechine Learning💻</a>
+          </div>
+
+        
+  <div class="post-widgets">
+    <div class="wp_rating">
+      <div id="wpac-rating"></div>
+    </div>
+  </div>
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/01/25/Machine%20Learning/Decision%20Trees/" rel="prev" title="Decision Trees --------------------------------------------------------------------------------【Mechine Learning💻】">
+      <i class="fa fa-chevron-left"></i> Decision Trees --------------------------------------------------------------------------------【Mechine Learning💻】
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/01/27/Machine%20Learning/Support%20Vector%20Machines/" rel="next" title="Support Vector Machines (SVM) ------------------------------------------------------------【Mechine Learning💻】">
+      Support Vector Machines (SVM) ------------------------------------------------------------【Mechine Learning💻】 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Logistic-Regression"><span class="nav-number">1.</span> <span class="nav-text">Logistic Regression</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%BB%E8%BE%91%E6%96%AF%E8%B0%9B%E5%88%86%E5%B8%83"><span class="nav-number">1.1.</span> <span class="nav-text">逻辑斯谛分布</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E9%A1%B9%E9%80%BB%E8%BE%91%E6%96%AF%E8%B0%9B%E5%9B%9E%E5%BD%92%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.2.</span> <span class="nav-text">二项逻辑斯谛回归模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A8%A1%E5%9E%8B%E5%8F%82%E6%95%B0%E4%BC%B0%E8%AE%A1"><span class="nav-number">1.3.</span> <span class="nav-text">模型参数估计</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%9A%E9%A1%B9%E9%80%BB%E8%BE%91%E6%96%AF%E8%B0%9B%E5%9B%9E%E5%BD%92"><span class="nav-number">1.4.</span> <span class="nav-text">多项逻辑斯谛回归</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%8C%E6%95%B4%E5%85%AC%E5%BC%8F%E6%8E%A8%E5%AF%BC"><span class="nav-number">1.5.</span> <span class="nav-text">完整公式推导</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.6.</span> <span class="nav-text">代码实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8C%89%E5%8E%9F%E7%90%86%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.6.1.</span> <span class="nav-text">按原理实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#sk-learn-%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.6.2.</span> <span class="nav-text">sk-learn 实现</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Ryan"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">Ryan</p>
+  <div class="site-description" itemprop="description"><font color="#444444">Truth, Goodness and Beauty</font></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">22</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Ryanlzz" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Ryanlzz" rel="noopener" target="_blank"><i class="fa fa-fw fa-fab fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:isliuze@gmail.com" title="E-Mail → mailto:isliuze@gmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-fa fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/people/ryan-91-34" title="ZHIHU → https:&#x2F;&#x2F;www.zhihu.com&#x2F;people&#x2F;ryan-91-34" rel="noopener" target="_blank"><i class="fa fa-fw fa-fab fa-zhihu"></i>ZHIHU</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/atom.xml" title="RSS → &#x2F;atom.xml"><i class="fa fa-fw fa-rss"></i>RSS</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ryan</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a>
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">Theme – <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/pjax/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/medium-zoom@1/dist/medium-zoom.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.getAttribute('pjax') !== null) {
+      element.setAttribute('pjax', '');
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+  <script pjax>
+  if (CONFIG.page.isPost) {
+    wpac_init = window.wpac_init || [];
+    wpac_init.push({
+      widget: 'Rating',
+      id: ,
+      el: 'wpac-rating',
+      color: 'fc6423'
+    });
+    (function() {
+      if ('WIDGETPACK_LOADED' in window) return;
+      WIDGETPACK_LOADED = true;
+      var mc = document.createElement('script');
+      mc.type = 'text/javascript';
+      mc.async = true;
+      mc.src = '//embed.widgetpack.com/widget.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mc, s.nextSibling);
+    })();
+  }
+  </script>
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+
+  
+
+    </div>
+</body>
+</html>

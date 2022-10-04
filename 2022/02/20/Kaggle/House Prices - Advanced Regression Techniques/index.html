@@ -1,0 +1,1296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon1.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon32.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico">
+  <link rel="mask-icon" href="/images/favicon1.png" color="#222">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.loli.net/css?family=Noto Sans Simplified Chinese:300,300italic,400,400italic,700,700italic|Roboto Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('http://yoursite.com').hostname,
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.7.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":true,"show_result":true,"style":"default"},
+    back2top: {"enable":true,"sidebar":true,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: true,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"buttons","active":null,"storage":true,"lazyload":true,"nav":{"disqus":{"text":"Load Disqus","order":-1}}},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":false,"async":true,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="House Prices - Advanced Regression Techniques理解题目给出关于房价的一些信息，通过这些信息来预测对应的房价 数据准备123456789101112131415161718192021222324252627import pandas as pdimport numpy as npimport random#Visualizationimport pand">
+<meta property="og:type" content="article">
+<meta property="og:title" content="House Prices - Advanced Regression Techniques ------------------------------------------------------【Kaggle🏆】">
+<meta property="og:url" content="http://yoursite.com/2022/02/20/Kaggle/House%20Prices%20-%20Advanced%20Regression%20Techniques/index.html">
+<meta property="og:site_name" content="Ryan&#39;s Blog">
+<meta property="og:description" content="House Prices - Advanced Regression Techniques理解题目给出关于房价的一些信息，通过这些信息来预测对应的房价 数据准备123456789101112131415161718192021222324252627import pandas as pdimport numpy as npimport random#Visualizationimport pand">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://s4.ax1x.com/2022/02/15/H21NRA.png">
+<meta property="article:published_time" content="2022-02-19T17:34:00.000Z">
+<meta property="article:modified_time" content="2022-06-23T15:58:10.000Z">
+<meta property="article:author" content="Ryan">
+<meta property="article:tag" content="Kaggle🏆">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s4.ax1x.com/2022/02/15/H21NRA.png">
+
+<link rel="canonical" href="http://yoursite.com/2022/02/20/Kaggle/House%20Prices%20-%20Advanced%20Regression%20Techniques/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>House Prices - Advanced Regression Techniques ------------------------------------------------------【Kaggle🏆】 | Ryan's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Ryan's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home🏠">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-desktop"></i>Home🏠</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="Searching..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/02/20/Kaggle/House%20Prices%20-%20Advanced%20Regression%20Techniques/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="Ryan">
+      <meta itemprop="description" content="<font color="#444444">Truth, Goodness and Beauty</font>">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ryan's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          House Prices - Advanced Regression Techniques ------------------------------------------------------【Kaggle🏆】
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2022-02-20 01:34:00" itemprop="dateCreated datePublished" datetime="2022-02-20T01:34:00+08:00">2022-02-20</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-06-23 23:58:10" itemprop="dateModified" datetime="2022-06-23T23:58:10+08:00">2022-06-23</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Kaggle-Competitions%F0%9F%8F%86/" itemprop="url" rel="index">
+                    <span itemprop="name">Kaggle Competitions🏆</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="House-Prices-Advanced-Regression-Techniques"><a href="#House-Prices-Advanced-Regression-Techniques" class="headerlink" title="House Prices - Advanced Regression Techniques"></a>House Prices - Advanced Regression Techniques</h1><h2 id="理解题目"><a href="#理解题目" class="headerlink" title="理解题目"></a>理解题目</h2><p>给出关于房价的一些信息，通过这些信息来预测对应的房价</p>
+<h2 id="数据准备"><a href="#数据准备" class="headerlink" title="数据准备"></a>数据准备</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line"></span><br><span class="line"><span class="comment">#Visualization</span></span><br><span class="line"><span class="keyword">import</span> pandas_profiling <span class="keyword">as</span> ppf</span><br><span class="line"><span class="keyword">import</span> seaborn <span class="keyword">as</span> sns</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line">%matplotlib inline</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> Counter</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> StandardScaler</span><br><span class="line"><span class="keyword">from</span> sklearn <span class="keyword">import</span> preprocessing</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> sklearn.linear_model <span class="keyword">import</span> ElasticNet, Lasso,  BayesianRidge, LassoLarsIC</span><br><span class="line"><span class="keyword">from</span> sklearn.ensemble <span class="keyword">import</span> RandomForestRegressor,  GradientBoostingRegressor</span><br><span class="line"><span class="keyword">from</span> sklearn.kernel_ridge <span class="keyword">import</span> KernelRidge</span><br><span class="line"><span class="keyword">from</span> sklearn.svm <span class="keyword">import</span> SVR</span><br><span class="line"><span class="keyword">from</span> sklearn.pipeline <span class="keyword">import</span> make_pipeline</span><br><span class="line"><span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> RobustScaler</span><br><span class="line"><span class="keyword">from</span> sklearn.base <span class="keyword">import</span> BaseEstimator, TransformerMixin, RegressorMixin, clone</span><br><span class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> GridSearchCV,RandomizedSearchCV,StratifiedKFold, cross_val_score, KFold</span><br><span class="line"><span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> mean_squared_error</span><br><span class="line"><span class="keyword">from</span> xgboost <span class="keyword">import</span> XGBRegressor</span><br><span class="line"><span class="keyword">from</span> lightgbm <span class="keyword">import</span> LGBMRegressor</span><br><span class="line"><span class="keyword">from</span> sklearn.ensemble <span class="keyword">import</span> StackingRegressor</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 读入数据</span></span><br><span class="line">train_df = pd.read_csv(<span class="string">&#x27;input/train.csv&#x27;</span>)</span><br><span class="line">test_df = pd.read_csv(<span class="string">&#x27;input/test.csv&#x27;</span>)</span><br><span class="line">combin = [train_df, test_df]</span><br></pre></td></tr></table></figure>
+
+<h2 id="理解数据"><a href="#理解数据" class="headerlink" title="理解数据"></a>理解数据</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#ppf.ProfileReport(train_df)</span></span><br><span class="line">train_df.info()</span><br></pre></td></tr></table></figure>
+
+<pre><code>&lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;
+RangeIndex: 1460 entries, 0 to 1459
+Data columns (total 81 columns):
+ #   Column         Non-Null Count  Dtype  
+---  ------         --------------  -----  
+ 0   Id             1460 non-null   int64  
+ 1   MSSubClass     1460 non-null   int64  
+ 2   MSZoning       1460 non-null   object 
+ 3   LotFrontage    1201 non-null   float64
+ 4   LotArea        1460 non-null   int64  
+ 5   Street         1460 non-null   object 
+ 6   Alley          91 non-null     object 
+ 7   LotShape       1460 non-null   object 
+ 8   LandContour    1460 non-null   object 
+ 9   Utilities      1460 non-null   object 
+ 10  LotConfig      1460 non-null   object 
+ 11  LandSlope      1460 non-null   object 
+ 12  Neighborhood   1460 non-null   object 
+ 13  Condition1     1460 non-null   object 
+ 14  Condition2     1460 non-null   object 
+ 15  BldgType       1460 non-null   object 
+ 16  HouseStyle     1460 non-null   object 
+ 17  OverallQual    1460 non-null   int64  
+ 18  OverallCond    1460 non-null   int64  
+ 19  YearBuilt      1460 non-null   int64  
+ 20  YearRemodAdd   1460 non-null   int64  
+ 21  RoofStyle      1460 non-null   object 
+ 22  RoofMatl       1460 non-null   object 
+ 23  Exterior1st    1460 non-null   object 
+ 24  Exterior2nd    1460 non-null   object 
+ 25  MasVnrType     1452 non-null   object 
+ 26  MasVnrArea     1452 non-null   float64
+ 27  ExterQual      1460 non-null   object 
+ 28  ExterCond      1460 non-null   object 
+ 29  Foundation     1460 non-null   object 
+ 30  BsmtQual       1423 non-null   object 
+ 31  BsmtCond       1423 non-null   object 
+ 32  BsmtExposure   1422 non-null   object 
+ 33  BsmtFinType1   1423 non-null   object 
+ 34  BsmtFinSF1     1460 non-null   int64  
+ 35  BsmtFinType2   1422 non-null   object 
+ 36  BsmtFinSF2     1460 non-null   int64  
+ 37  BsmtUnfSF      1460 non-null   int64  
+ 38  TotalBsmtSF    1460 non-null   int64  
+ 39  Heating        1460 non-null   object 
+ 40  HeatingQC      1460 non-null   object 
+ 41  CentralAir     1460 non-null   object 
+ 42  Electrical     1459 non-null   object 
+ 43  1stFlrSF       1460 non-null   int64  
+ 44  2ndFlrSF       1460 non-null   int64  
+ 45  LowQualFinSF   1460 non-null   int64  
+ 46  GrLivArea      1460 non-null   int64  
+ 47  BsmtFullBath   1460 non-null   int64  
+ 48  BsmtHalfBath   1460 non-null   int64  
+ 49  FullBath       1460 non-null   int64  
+ 50  HalfBath       1460 non-null   int64  
+ 51  BedroomAbvGr   1460 non-null   int64  
+ 52  KitchenAbvGr   1460 non-null   int64  
+ 53  KitchenQual    1460 non-null   object 
+ 54  TotRmsAbvGrd   1460 non-null   int64  
+ 55  Functional     1460 non-null   object 
+ 56  Fireplaces     1460 non-null   int64  
+ 57  FireplaceQu    770 non-null    object 
+ 58  GarageType     1379 non-null   object 
+ 59  GarageYrBlt    1379 non-null   float64
+ 60  GarageFinish   1379 non-null   object 
+ 61  GarageCars     1460 non-null   int64  
+ 62  GarageArea     1460 non-null   int64  
+ 63  GarageQual     1379 non-null   object 
+ 64  GarageCond     1379 non-null   object 
+ 65  PavedDrive     1460 non-null   object 
+ 66  WoodDeckSF     1460 non-null   int64  
+ 67  OpenPorchSF    1460 non-null   int64  
+ 68  EnclosedPorch  1460 non-null   int64  
+ 69  3SsnPorch      1460 non-null   int64  
+ 70  ScreenPorch    1460 non-null   int64  
+ 71  PoolArea       1460 non-null   int64  
+ 72  PoolQC         7 non-null      object 
+ 73  Fence          281 non-null    object 
+ 74  MiscFeature    54 non-null     object 
+ 75  MiscVal        1460 non-null   int64  
+ 76  MoSold         1460 non-null   int64  
+ 77  YrSold         1460 non-null   int64  
+ 78  SaleType       1460 non-null   object 
+ 79  SaleCondition  1460 non-null   object 
+ 80  SalePrice      1460 non-null   int64  
+dtypes: float64(3), int64(35), object(43)
+memory usage: 924.0+ KB
+</code></pre>
+<h2 id="清洗数据"><a href="#清洗数据" class="headerlink" title="清洗数据"></a>清洗数据</h2><h3 id="查看缺失值多所占比列"><a href="#查看缺失值多所占比列" class="headerlink" title="查看缺失值多所占比列"></a>查看缺失值多所占比列</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#查看缺失值所占比列</span></span><br><span class="line">train_df_total = train_df.isnull().<span class="built_in">sum</span>().sort_values(ascending=<span class="literal">False</span>)</span><br><span class="line">train_df_percent=(train_df.isnull().<span class="built_in">sum</span>()/<span class="built_in">len</span>(train_df)).sort_values(ascending=<span class="literal">False</span>)</span><br><span class="line">test_df_total = test_df.isnull().<span class="built_in">sum</span>().sort_values(ascending=<span class="literal">False</span>)</span><br><span class="line">test_df_percent=(test_df.isnull().<span class="built_in">sum</span>()/<span class="built_in">len</span>(test_df)).sort_values(ascending=<span class="literal">False</span>)</span><br><span class="line">type_df = train_df.dtypes</span><br><span class="line">missing_data = pd.concat([train_df_total, train_df_percent, test_df_total, test_df_percent, type_df], axis=<span class="number">1</span>, keys=[<span class="string">&#x27;train__missing&#x27;</span>, <span class="string">&#x27;percent&#x27;</span>,<span class="string">&#x27;test__missing&#x27;</span>,<span class="string">&#x27;percent&#x27;</span>, <span class="string">&#x27;dtype&#x27;</span>])</span><br><span class="line">missing_data[missing_data.<span class="built_in">sum</span>(axis=<span class="number">1</span>,numeric_only=<span class="literal">True</span>) &gt; <span class="number">0</span>]</span><br></pre></td></tr></table></figure>
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+<pre><code>.dataframe tbody tr th &#123;
+    vertical-align: top;
+&#125;
+
+.dataframe thead th &#123;
+    text-align: right;
+&#125;
+</code></pre>
+<p></style></p>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>train__missing</th>
+      <th>percent</th>
+      <th>test__missing</th>
+      <th>percent</th>
+      <th>dtype</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>PoolQC</th>
+      <td>1453</td>
+      <td>0.995205</td>
+      <td>1456.0</td>
+      <td>0.997944</td>
+      <td>object</td>
+    </tr>
+    <tr>
+      <th>MiscFeature</th>
+      <td>1406</td>
+      <td>0.963014</td>
+      <td>1408.0</td>
+      <td>0.965045</td>
+      <td>object</td>
+    </tr>
+    <tr>
+      <th>Alley</th>
+      <td>1369</td>
+      <td>0.937671</td>
+      <td>1352.0</td>
+      <td>0.926662</td>
+      <td>object</td>
+    </tr>
+    <tr>
+      <th>Fence</th>
+      <td>1179</td>
+      <td>0.807534</td>
+      <td>1169.0</td>
+      <td>0.801234</td>
+      <td>object</td>
+    </tr>
+    <tr>
+      <th>FireplaceQu</th>
+      <td>690</td>
+      <td>0.472603</td>
+      <td>730.0</td>
+      <td>0.500343</td>
+      <td>object</td>
+    </tr>
+    <tr>
+      <th>LotFrontage</th>
+      <td>259</td>
+      <td>0.177397</td>
+      <td>227.0</td>
+      <td>0.155586</td>
+      <td>float64</td>
+    </tr>
+    <tr>
+      <th>GarageYrBlt</th>
+      <td>81</td>
+      <td>0.055479</td>
+      <td>78.0</td>
+      <td>0.053461</td>
+      <td>float64</td>
+    </tr>
+    <tr>
+      <th>GarageCond</th>
+      <td>81</td>
+      <td>0.055479</td>
+      <td>78.0</td>
+      <td>0.053461</td>
+      <td>object</td>
+    </tr>
+    <tr>
+      <th>GarageType</th>
+      <td>81</td>
+      <td>0.055479</td>
+      <td>76.0</td>
+      <td>0.052090</td>
+      <td>object</td>
+    </tr>
+    <tr>
+      <th>GarageFinish</th>
+      <td>81</td>
+      <td>0.055479</td>
+      <td>78.0</td>
+      <td>0.053461</td>
+      <td>object</td>
+    </tr>
+    <tr>
+      <th>GarageQual</th>
+      <td>81</td>
+      <td>0.055479</td>
+      <td>78.0</td>
+      <td>0.053461</td>
+      <td>object</td>
+    </tr>
+    <tr>
+      <th>BsmtFinType2</th>
+      <td>38</td>
+      <td>0.026027</td>
+      <td>42.0</td>
+      <td>0.028787</td>
+      <td>object</td>
+    </tr>
+    <tr>
+      <th>BsmtExposure</th>
+      <td>38</td>
+      <td>0.026027</td>
+      <td>44.0</td>
+      <td>0.030158</td>
+      <td>object</td>
+    </tr>
+    <tr>
+      <th>BsmtQual</th>
+      <td>37</td>
+      <td>0.025342</td>
+      <td>44.0</td>
+      <td>0.030158</td>
+      <td>object</td>
+    </tr>
+    <tr>
+      <th>BsmtCond</th>
+      <td>37</td>
+      <td>0.025342</td>
+      <td>45.0</td>
+      <td>0.030843</td>
+      <td>object</td>
+    </tr>
+    <tr>
+      <th>BsmtFinType1</th>
+      <td>37</td>
+      <td>0.025342</td>
+      <td>42.0</td>
+      <td>0.028787</td>
+      <td>object</td>
+    </tr>
+    <tr>
+      <th>MasVnrArea</th>
+      <td>8</td>
+      <td>0.005479</td>
+      <td>15.0</td>
+      <td>0.010281</td>
+      <td>float64</td>
+    </tr>
+    <tr>
+      <th>MasVnrType</th>
+      <td>8</td>
+      <td>0.005479</td>
+      <td>16.0</td>
+      <td>0.010966</td>
+      <td>object</td>
+    </tr>
+    <tr>
+      <th>Electrical</th>
+      <td>1</td>
+      <td>0.000685</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>object</td>
+    </tr>
+    <tr>
+      <th>Functional</th>
+      <td>0</td>
+      <td>0.000000</td>
+      <td>2.0</td>
+      <td>0.001371</td>
+      <td>object</td>
+    </tr>
+    <tr>
+      <th>KitchenQual</th>
+      <td>0</td>
+      <td>0.000000</td>
+      <td>1.0</td>
+      <td>0.000685</td>
+      <td>object</td>
+    </tr>
+    <tr>
+      <th>BsmtHalfBath</th>
+      <td>0</td>
+      <td>0.000000</td>
+      <td>2.0</td>
+      <td>0.001371</td>
+      <td>int64</td>
+    </tr>
+    <tr>
+      <th>GarageCars</th>
+      <td>0</td>
+      <td>0.000000</td>
+      <td>1.0</td>
+      <td>0.000685</td>
+      <td>int64</td>
+    </tr>
+    <tr>
+      <th>GarageArea</th>
+      <td>0</td>
+      <td>0.000000</td>
+      <td>1.0</td>
+      <td>0.000685</td>
+      <td>int64</td>
+    </tr>
+    <tr>
+      <th>SaleType</th>
+      <td>0</td>
+      <td>0.000000</td>
+      <td>1.0</td>
+      <td>0.000685</td>
+      <td>object</td>
+    </tr>
+    <tr>
+      <th>BsmtFullBath</th>
+      <td>0</td>
+      <td>0.000000</td>
+      <td>2.0</td>
+      <td>0.001371</td>
+      <td>int64</td>
+    </tr>
+    <tr>
+      <th>Utilities</th>
+      <td>0</td>
+      <td>0.000000</td>
+      <td>2.0</td>
+      <td>0.001371</td>
+      <td>object</td>
+    </tr>
+    <tr>
+      <th>MSZoning</th>
+      <td>0</td>
+      <td>0.000000</td>
+      <td>4.0</td>
+      <td>0.002742</td>
+      <td>object</td>
+    </tr>
+    <tr>
+      <th>BsmtFinSF2</th>
+      <td>0</td>
+      <td>0.000000</td>
+      <td>1.0</td>
+      <td>0.000685</td>
+      <td>int64</td>
+    </tr>
+    <tr>
+      <th>TotalBsmtSF</th>
+      <td>0</td>
+      <td>0.000000</td>
+      <td>1.0</td>
+      <td>0.000685</td>
+      <td>int64</td>
+    </tr>
+    <tr>
+      <th>BsmtUnfSF</th>
+      <td>0</td>
+      <td>0.000000</td>
+      <td>1.0</td>
+      <td>0.000685</td>
+      <td>int64</td>
+    </tr>
+    <tr>
+      <th>BsmtFinSF1</th>
+      <td>0</td>
+      <td>0.000000</td>
+      <td>1.0</td>
+      <td>0.000685</td>
+      <td>int64</td>
+    </tr>
+    <tr>
+      <th>Exterior2nd</th>
+      <td>0</td>
+      <td>0.000000</td>
+      <td>1.0</td>
+      <td>0.000685</td>
+      <td>object</td>
+    </tr>
+    <tr>
+      <th>Exterior1st</th>
+      <td>0</td>
+      <td>0.000000</td>
+      <td>1.0</td>
+      <td>0.000685</td>
+      <td>object</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+<h3 id="解决缺失值"><a href="#解决缺失值" class="headerlink" title="解决缺失值"></a>解决缺失值</h3><p>PoolQC, MiscFeature, Alley, Fence 这四个变量缺失较多，可直接剔除整列，其他剩下的缺失值可用一些特殊值补充。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 直接剔除这三个特征</span></span><br><span class="line">drop_column = [<span class="string">&#x27;PoolQC&#x27;</span>,<span class="string">&#x27;MiscFeature&#x27;</span>, <span class="string">&#x27;Alley&#x27;</span>, <span class="string">&#x27;Fence&#x27;</span>]</span><br><span class="line">train_df.drop(drop_column, axis=<span class="number">1</span>, inplace=<span class="literal">True</span>)</span><br><span class="line">test_df.drop(drop_column, axis=<span class="number">1</span>, inplace=<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 缺失值列表，第一个中nan代表没有，第二个为数值型，第三个为对象型</span></span><br><span class="line">missing_none = [<span class="string">&#x27;FireplaceQu&#x27;</span>, <span class="string">&#x27;GarageCond&#x27;</span>, <span class="string">&#x27;GarageType&#x27;</span>, <span class="string">&#x27;GarageFinish&#x27;</span>, <span class="string">&#x27;GarageQual&#x27;</span>, <span class="string">&#x27;BsmtFinType2&#x27;</span>, <span class="string">&#x27;BsmtExposure&#x27;</span>, <span class="string">&#x27;BsmtQual&#x27;</span>, <span class="string">&#x27;BsmtCond&#x27;</span>, <span class="string">&#x27;BsmtFinType1&#x27;</span>]</span><br><span class="line">missing_num = [<span class="string">&#x27;LotFrontage&#x27;</span>, <span class="string">&#x27;GarageYrBlt&#x27;</span>, <span class="string">&#x27;MasVnrArea&#x27;</span>, <span class="string">&#x27;BsmtHalfBath&#x27;</span>,<span class="string">&#x27;BsmtHalfBath&#x27;</span>, <span class="string">&#x27;GarageCars&#x27;</span>, <span class="string">&#x27;GarageArea&#x27;</span>, <span class="string">&#x27;BsmtFullBath&#x27;</span>, <span class="string">&#x27;BsmtFinSF2&#x27;</span>, <span class="string">&#x27;TotalBsmtSF&#x27;</span>, <span class="string">&#x27;BsmtUnfSF&#x27;</span>, <span class="string">&#x27;BsmtFinSF1&#x27;</span>]</span><br><span class="line">missing_obj = [<span class="string">&#x27;MasVnrType&#x27;</span>, <span class="string">&#x27;Electrical&#x27;</span>, <span class="string">&#x27;Functional&#x27;</span>,<span class="string">&#x27;KitchenQual&#x27;</span>, <span class="string">&#x27;SaleType&#x27;</span>, <span class="string">&#x27;Utilities&#x27;</span>, <span class="string">&#x27;MSZoning&#x27;</span>, <span class="string">&#x27;Exterior2nd&#x27;</span>, <span class="string">&#x27;Exterior1st&#x27;</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 填补缺失值</span></span><br><span class="line"><span class="keyword">for</span> df <span class="keyword">in</span> combin:</span><br><span class="line">    <span class="keyword">for</span> col <span class="keyword">in</span> missing_none:</span><br><span class="line">        df[col] = df[col].fillna(<span class="string">&#x27;none&#x27;</span>)</span><br><span class="line">    <span class="keyword">for</span> col <span class="keyword">in</span> missing_num:</span><br><span class="line">        df[col] = df[col].fillna(df[col].mean())</span><br><span class="line">    <span class="keyword">for</span> col <span class="keyword">in</span> missing_obj:</span><br><span class="line">        df[col] = df[col].fillna(df[col].mode()[<span class="number">0</span>])</span><br></pre></td></tr></table></figure>
+
+<p>现在再来检查一下缺失值</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#查看缺失值所占比列</span></span><br><span class="line">train_df_total = train_df.isnull().<span class="built_in">sum</span>().sort_values(ascending=<span class="literal">False</span>)</span><br><span class="line">train_df_percent=(train_df.isnull().<span class="built_in">sum</span>()/<span class="built_in">len</span>(train_df)).sort_values(ascending=<span class="literal">False</span>)</span><br><span class="line">test_df_total = test_df.isnull().<span class="built_in">sum</span>().sort_values(ascending=<span class="literal">False</span>)</span><br><span class="line">test_df_percent=(test_df.isnull().<span class="built_in">sum</span>()/<span class="built_in">len</span>(test_df)).sort_values(ascending=<span class="literal">False</span>)</span><br><span class="line">type_df = train_df.dtypes</span><br><span class="line">missing_data = pd.concat([train_df_total, train_df_percent, test_df_total, test_df_percent, type_df], axis=<span class="number">1</span>, keys=[<span class="string">&#x27;train__missing&#x27;</span>, <span class="string">&#x27;percent&#x27;</span>,<span class="string">&#x27;test__missing&#x27;</span>,<span class="string">&#x27;percent&#x27;</span>, <span class="string">&#x27;dtype&#x27;</span>])</span><br><span class="line">missing_data</span><br></pre></td></tr></table></figure>
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+<pre><code>.dataframe tbody tr th &#123;
+    vertical-align: top;
+&#125;
+
+.dataframe thead th &#123;
+    text-align: right;
+&#125;
+</code></pre>
+<p></style></p>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>train__missing</th>
+      <th>percent</th>
+      <th>test__missing</th>
+      <th>percent</th>
+      <th>dtype</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Id</th>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>int64</td>
+    </tr>
+    <tr>
+      <th>HalfBath</th>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>int64</td>
+    </tr>
+    <tr>
+      <th>FireplaceQu</th>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>object</td>
+    </tr>
+    <tr>
+      <th>Fireplaces</th>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>int64</td>
+    </tr>
+    <tr>
+      <th>Functional</th>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>object</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>MasVnrArea</th>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>float64</td>
+    </tr>
+    <tr>
+      <th>MasVnrType</th>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>object</td>
+    </tr>
+    <tr>
+      <th>Exterior2nd</th>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>object</td>
+    </tr>
+    <tr>
+      <th>Exterior1st</th>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>object</td>
+    </tr>
+    <tr>
+      <th>SalePrice</th>
+      <td>0</td>
+      <td>0.0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>int64</td>
+    </tr>
+  </tbody>
+</table>
+<p>77 rows × 5 columns</p>
+</div>
+
+<p>从上面的表格可以看到目前已经没有缺失值了。</p>
+<h2 id="特征工程"><a href="#特征工程" class="headerlink" title="特征工程"></a>特征工程</h2><h3 id="数据类型装换"><a href="#数据类型装换" class="headerlink" title="数据类型装换"></a>数据类型装换</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 将数字类别型转换为字符类别型</span></span><br><span class="line">num_to_str = [<span class="string">&#x27;MSSubClass&#x27;</span>, <span class="string">&#x27;OverallQual&#x27;</span>, <span class="string">&#x27;YrSold&#x27;</span>, <span class="string">&#x27;MoSold&#x27;</span>]</span><br><span class="line"><span class="keyword">for</span> df <span class="keyword">in</span> combin:</span><br><span class="line">    <span class="keyword">for</span> col <span class="keyword">in</span> num_to_str:</span><br><span class="line">        df[col] = df[col].astype(<span class="built_in">str</span>)</span><br><span class="line">            </span><br><span class="line"><span class="comment"># one-hot编码</span></span><br><span class="line">train_df_dummy = pd.get_dummies(train_df)</span><br><span class="line">test_df_dummy = pd.get_dummies(test_df)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 解决train test编码不一致</span></span><br><span class="line"><span class="comment">#求出两者的列名不同，以及确定需要补充的zeros矩阵shape</span></span><br><span class="line">train_columns = [column <span class="keyword">for</span> column <span class="keyword">in</span> train_df_dummy]</span><br><span class="line">test_columns = [column <span class="keyword">for</span> column <span class="keyword">in</span> test_df_dummy]</span><br><span class="line">diff = [i <span class="keyword">for</span> i <span class="keyword">in</span> train_columns <span class="keyword">if</span> i <span class="keyword">not</span> <span class="keyword">in</span> test_columns]</span><br><span class="line">new = np.zeros((<span class="built_in">len</span>(test_df),<span class="built_in">len</span>(diff)))</span><br><span class="line">new = pd.DataFrame(new,columns=diff)</span><br><span class="line">test_df_dummy = pd.concat([test_df_dummy,new],axis=<span class="number">1</span>)</span><br><span class="line"><span class="built_in">print</span>(diff)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 解决train test编码不一致</span></span><br><span class="line"><span class="comment">#求出两者的列名不同，以及确定需要补充的zeros矩阵shape</span></span><br><span class="line">diff = [i <span class="keyword">for</span> i <span class="keyword">in</span> test_columns <span class="keyword">if</span> i <span class="keyword">not</span> <span class="keyword">in</span> train_columns]</span><br><span class="line">new = np.zeros((<span class="built_in">len</span>(train_df),<span class="built_in">len</span>(diff)))</span><br><span class="line">new = pd.DataFrame(new,columns=diff)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;***********&#x27;</span>)</span><br><span class="line"><span class="built_in">print</span>(diff)</span><br><span class="line">train_df_dummy = pd.concat([train_df_dummy,new],axis=<span class="number">1</span>)</span><br><span class="line">test_df_dummy.drop(<span class="string">&#x27;SalePrice&#x27;</span>,axis=<span class="number">1</span>, inplace=<span class="literal">True</span>)</span><br><span class="line">train_df_dummy.shape, test_df_dummy.shape</span><br></pre></td></tr></table></figure>
+
+<pre><code>[&#39;SalePrice&#39;, &#39;Utilities_NoSeWa&#39;, &#39;Condition2_RRAe&#39;, &#39;Condition2_RRAn&#39;, &#39;Condition2_RRNn&#39;, &#39;HouseStyle_2.5Fin&#39;, &#39;RoofMatl_ClyTile&#39;, &#39;RoofMatl_Membran&#39;, &#39;RoofMatl_Metal&#39;, &#39;RoofMatl_Roll&#39;, &#39;Exterior1st_ImStucc&#39;, &#39;Exterior1st_Stone&#39;, &#39;Exterior2nd_Other&#39;, &#39;Heating_Floor&#39;, &#39;Heating_OthW&#39;, &#39;Electrical_Mix&#39;, &#39;GarageQual_Ex&#39;]
+***********
+[&#39;MSSubClass_150&#39;]
+
+((1460, 326), (1459, 325))
+</code></pre>
+<h3 id="特征选择"><a href="#特征选择" class="headerlink" title="特征选择"></a>特征选择</h3><p>选择和价格相关的特征，丢掉一些不需要的特征，通过相关性来判断</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 计算相关性并剔除相关性低于|0.15|的特征</span></span><br><span class="line">corr = train_df_dummy.corr(method=<span class="string">&#x27;pearson&#x27;</span>)</span><br><span class="line">low_corr = corr[<span class="string">&#x27;SalePrice&#x27;</span>][(corr[<span class="string">&#x27;SalePrice&#x27;</span>] &lt; <span class="number">0.15</span>) &amp; (corr[<span class="string">&#x27;SalePrice&#x27;</span>] &gt; -<span class="number">0.15</span>)].index</span><br><span class="line">low_corr = low_corr.to_list()</span><br><span class="line">train_df_dummy.drop(low_corr,axis=<span class="number">1</span>,inplace=<span class="literal">True</span>)</span><br><span class="line">test_df_dummy.drop(low_corr,axis=<span class="number">1</span>,inplace=<span class="literal">True</span>)</span><br></pre></td></tr></table></figure>
+
+<h2 id="评估算法"><a href="#评估算法" class="headerlink" title="评估算法"></a>评估算法</h2><h3 id="数据集划分"><a href="#数据集划分" class="headerlink" title="数据集划分"></a>数据集划分</h3><p>这一部分，可以使用随机划分，或者是随机抽样，分层抽样等，sklearn都有相应的库函数进行调用， 分离完训练集和测试集之后，测试集放在一边不用管，拿训练集进行下面的模型评估</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 划分训练集和测试集</span></span><br><span class="line">X_train = train_df_dummy.drop(<span class="string">&#x27;SalePrice&#x27;</span>, axis=<span class="number">1</span>)</span><br><span class="line">Y_train = train_df_dummy[<span class="string">&#x27;SalePrice&#x27;</span>]</span><br><span class="line">X_test = test_df_dummy.copy()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 标准化</span></span><br><span class="line">X_train = StandardScaler().fit_transform(X_train)</span><br><span class="line">X_test = StandardScaler().fit_transform(X_test)</span><br><span class="line"></span><br><span class="line">X_train.shape, Y_train.shape, X_test.shape</span><br></pre></td></tr></table></figure>
+
+<p>((1460, 105), (1460,), (1459, 105))</p>
+<h3 id="评估模型"><a href="#评估模型" class="headerlink" title="评估模型"></a>评估模型</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Cross validate model with Kfold stratified cross val</span></span><br><span class="line">kf = KFold(n_splits=<span class="number">10</span>, random_state=<span class="number">42</span>, shuffle=<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Modeling step Test differents algorithms </span></span><br><span class="line">Regressors = []</span><br><span class="line">Regressors.append(ElasticNet())</span><br><span class="line">Regressors.append(Lasso())</span><br><span class="line">Regressors.append(BayesianRidge())</span><br><span class="line">Regressors.append(LassoLarsIC())</span><br><span class="line">Regressors.append(RandomForestRegressor())</span><br><span class="line">Regressors.append(GradientBoostingRegressor())</span><br><span class="line">Regressors.append(KernelRidge())</span><br><span class="line">Regressors.append(SVR())</span><br><span class="line">Regressors.append(LGBMRegressor())</span><br><span class="line">Regressors.append(XGBRegressor())</span><br><span class="line"></span><br><span class="line">cv_results = []</span><br><span class="line"><span class="keyword">for</span> regressor <span class="keyword">in</span> Regressors:</span><br><span class="line">    cv_results.append(np.sqrt(-cross_val_score(regressor, X_train, Y_train, scoring = <span class="string">&quot;neg_mean_squared_error&quot;</span>, cv = kf, n_jobs=-<span class="number">1</span>)))</span><br><span class="line"></span><br><span class="line">cv_means = []</span><br><span class="line">cv_std = []</span><br><span class="line"><span class="keyword">for</span> cv_result <span class="keyword">in</span> cv_results:</span><br><span class="line">    cv_means.append(cv_result.mean())</span><br><span class="line">    cv_std.append(cv_result.std())</span><br><span class="line"></span><br><span class="line">cv_res = pd.DataFrame(&#123;<span class="string">&quot;CrossValMeans&quot;</span>:cv_means,<span class="string">&quot;CrossValerrors&quot;</span>: cv_std,<span class="string">&quot;Algorithm&quot;</span>:[<span class="string">&quot;ElasticNet&quot;</span>,<span class="string">&quot;Lasso&quot;</span>,<span class="string">&quot;BayesianRidge&quot;</span>,</span><br><span class="line"><span class="string">&quot;LassoLarsIC&quot;</span>,<span class="string">&quot;RandomForest&quot;</span>,<span class="string">&quot;GradientBoosting&quot;</span>,<span class="string">&quot;KernelRidge&quot;</span>,<span class="string">&quot;SVR&quot;</span>,<span class="string">&quot;LGBMRegressor&quot;</span>,<span class="string">&quot;XGBRegressor&quot;</span>]&#125;)</span><br><span class="line"></span><br><span class="line">cv_res.sort_values(by=[<span class="string">&quot;CrossValMeans&quot;</span>], ascending=<span class="literal">False</span>, inplace=<span class="literal">True</span>)</span><br><span class="line">g = sns.barplot(x=<span class="string">&quot;CrossValMeans&quot;</span>,y=<span class="string">&quot;Algorithm&quot;</span>, data=cv_res,palette=<span class="string">&quot;Set3&quot;</span>,orient = <span class="string">&quot;h&quot;</span>,**&#123;<span class="string">&#x27;xerr&#x27;</span>:cv_std&#125;)</span><br><span class="line">g.set_xlabel(<span class="string">&quot;Mean Accuracy&quot;</span>)</span><br><span class="line">g = g.set_title(<span class="string">&quot;Cross validation scores&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+
+<p><img src="https://s4.ax1x.com/2022/02/15/H21NRA.png" alt="png"></p>
+<h2 id="优化模型"><a href="#优化模型" class="headerlink" title="优化模型"></a>优化模型</h2><h3 id="算法调参"><a href="#算法调参" class="headerlink" title="算法调参"></a>算法调参</h3><p>从上面表现比较好的模型中选出2-3个，可以尝试进行合理的参数搜索，找到合适的参数。<br>选择排名较高的模型，GradientBossting, RandomForest, LGBMRegressor这三个模型，分别调参选择最合适的参数</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># GradientBossting</span></span><br><span class="line">GBR = GradientBoostingRegressor()</span><br><span class="line"></span><br><span class="line"><span class="comment">## Search grid for optimal parameters</span></span><br><span class="line">rf_param_grid = &#123;<span class="string">&#x27;learning_rate&#x27;</span>: [<span class="number">0.01</span>,<span class="number">0.02</span>,<span class="number">0.03</span>,<span class="number">0.04</span>],</span><br><span class="line">                  <span class="string">&#x27;subsample&#x27;</span>    : [<span class="number">0.9</span>, <span class="number">0.5</span>, <span class="number">0.2</span>, <span class="number">0.1</span>],</span><br><span class="line">                  <span class="string">&#x27;n_estimators&#x27;</span> : [<span class="number">100</span>,<span class="number">500</span>,<span class="number">1000</span>, <span class="number">1500</span>],</span><br><span class="line">                  <span class="string">&#x27;max_depth&#x27;</span>    : [<span class="number">4</span>,<span class="number">6</span>,<span class="number">8</span>,<span class="number">10</span>]</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">gsGBR = GridSearchCV(GBR,param_grid = rf_param_grid, cv=kf, scoring=<span class="string">&quot;neg_mean_squared_error&quot;</span>, n_jobs= -<span class="number">1</span>, verbose = <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">gsGBR.fit(X_train,Y_train)</span><br><span class="line"></span><br><span class="line">GBR_best = gsGBR.best_estimator_</span><br><span class="line"></span><br><span class="line"><span class="comment"># Best score</span></span><br><span class="line">gsGBR.best_score_</span><br></pre></td></tr></table></figure>
+
+<pre><code>Fitting 10 folds for each of 256 candidates, totalling 2560 fits
+
+-722057646.188995
+</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># RandomForest</span></span><br><span class="line">RFR = RandomForestRegressor()</span><br><span class="line"></span><br><span class="line"><span class="comment">## Search grid for optimal parameters</span></span><br><span class="line">rf_param_grid = &#123;<span class="string">&quot;max_depth&quot;</span>: [<span class="literal">None</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>],</span><br><span class="line">              <span class="string">&quot;max_features&quot;</span>: [<span class="number">1</span>, <span class="number">3</span>, <span class="number">10</span>],</span><br><span class="line">              <span class="string">&quot;min_samples_split&quot;</span>: [<span class="number">2</span>, <span class="number">3</span>, <span class="number">10</span>],</span><br><span class="line">              <span class="string">&quot;min_samples_leaf&quot;</span>: [<span class="number">1</span>, <span class="number">3</span>, <span class="number">10</span>],</span><br><span class="line">              <span class="string">&quot;bootstrap&quot;</span>: [<span class="literal">False</span>],</span><br><span class="line">              <span class="string">&quot;n_estimators&quot;</span> :[<span class="number">500</span>,<span class="number">700</span>,<span class="number">1000</span>],</span><br><span class="line">              <span class="string">&quot;criterion&quot;</span>: [<span class="string">&quot;squared_error&quot;</span>]&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">gsRFR = GridSearchCV(RFR,param_grid = rf_param_grid, cv=kf, scoring=<span class="string">&quot;neg_mean_squared_error&quot;</span>, n_jobs= -<span class="number">1</span>, verbose = <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">gsRFR.fit(X_train,Y_train)</span><br><span class="line"></span><br><span class="line">RFR_best = gsRFR.best_estimator_</span><br><span class="line"></span><br><span class="line"><span class="comment"># Best score</span></span><br><span class="line">gsRFR.best_score_</span><br></pre></td></tr></table></figure>
+
+<pre><code>Fitting 10 folds for each of 324 candidates, totalling 3240 fits
+
+-789233242.3297012
+</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># LGBMRegressor</span></span><br><span class="line"></span><br><span class="line">LGBMR = LGBMRegressor()</span><br><span class="line"></span><br><span class="line"><span class="comment">## Search grid for optimal parameters</span></span><br><span class="line">rf_param_grid = &#123;</span><br><span class="line">    <span class="string">&#x27;num_leaves&#x27;</span>: [<span class="number">7</span>, <span class="number">14</span>, <span class="number">21</span>, <span class="number">28</span>, <span class="number">31</span>, <span class="number">50</span>],</span><br><span class="line">    <span class="string">&#x27;learning_rate&#x27;</span>: [<span class="number">0.1</span>, <span class="number">0.03</span>, <span class="number">0.003</span>],</span><br><span class="line">    <span class="string">&#x27;max_depth&#x27;</span>: [-<span class="number">1</span>, <span class="number">3</span>, <span class="number">5</span>],</span><br><span class="line">    <span class="string">&#x27;n_estimators&#x27;</span>: [<span class="number">50</span>, <span class="number">100</span>, <span class="number">200</span>, <span class="number">500</span>],</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">gsLGBMR = GridSearchCV(LGBMR,param_grid = rf_param_grid, cv=kf, scoring=<span class="string">&quot;neg_mean_squared_error&quot;</span>, n_jobs= -<span class="number">1</span>, verbose = <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">gsLGBMR.fit(X_train,Y_train)</span><br><span class="line"></span><br><span class="line">LGBMR_best = gsLGBMR.best_estimator_</span><br><span class="line"></span><br><span class="line"><span class="comment"># Best score</span></span><br><span class="line">gsLGBMR.best_score_</span><br></pre></td></tr></table></figure>
+
+<pre><code>Fitting 10 folds for each of 216 candidates, totalling 2160 fits
+
+-812447559.5585997
+</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># XGBRegressor()</span></span><br><span class="line">XGBR = XGBRegressor()</span><br><span class="line"></span><br><span class="line"><span class="comment">## Search grid for optimal parameters</span></span><br><span class="line">rf_param_grid = &#123;<span class="string">&quot;learning_rate&quot;</span>: (<span class="number">0.05</span>, <span class="number">0.10</span>, <span class="number">0.15</span>),</span><br><span class="line">                <span class="string">&quot;max_depth&quot;</span>: [ <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">8</span>],</span><br><span class="line">                <span class="string">&quot;min_child_weight&quot;</span>: [ <span class="number">1</span>, <span class="number">3</span>, <span class="number">5</span>, <span class="number">7</span>],</span><br><span class="line">                <span class="string">&quot;gamma&quot;</span>:[ <span class="number">0.0</span>, <span class="number">0.1</span>, <span class="number">0.2</span>],</span><br><span class="line">                <span class="string">&quot;colsample_bytree&quot;</span>:[ <span class="number">0.3</span>, <span class="number">0.4</span>],</span><br><span class="line">                <span class="string">&quot;n_estimators&quot;</span>: [<span class="number">500</span>]&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">gsXGBR = GridSearchCV(XGBR,param_grid = rf_param_grid, cv=kf, scoring=<span class="string">&quot;neg_mean_squared_error&quot;</span>, n_jobs= -<span class="number">1</span>, verbose = <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">gsXGBR.fit(X_train,Y_train)</span><br><span class="line"></span><br><span class="line">XGBR_best = gsXGBR.best_estimator_</span><br><span class="line"></span><br><span class="line"><span class="comment"># Best score</span></span><br><span class="line">gsXGBR.best_score_</span><br></pre></td></tr></table></figure>
+
+<pre><code>Fitting 10 folds for each of 360 candidates, totalling 3600 fits
+
+-753844630.652252
+</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Stacking</span></span><br><span class="line">estimators = [</span><br><span class="line">    (<span class="string">&#x27;gbr&#x27;</span>, GBR_best),</span><br><span class="line">    (<span class="string">&#x27;rfr&#x27;</span>, RFR_best),</span><br><span class="line">    (<span class="string">&#x27;lgbmr&#x27;</span>, LGBMR_best)</span><br><span class="line">]</span><br><span class="line"></span><br><span class="line">reg = StackingRegressor(</span><br><span class="line">    estimators=estimators,</span><br><span class="line">    final_estimator=XGBR_best</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">reg.fit(X_train,Y_train)</span><br></pre></td></tr></table></figure>
+
+
+<pre><code>StackingRegressor(estimators=[(&#39;gbr&#39;,
+                               GradientBoostingRegressor(learning_rate=0.03,
+                                                         max_depth=4,
+                                                         n_estimators=500,
+                                                         subsample=0.5)),
+                              (&#39;rfr&#39;,
+                               RandomForestRegressor(bootstrap=False,
+                                                     max_features=10,
+                                                     n_estimators=700)),
+                              (&#39;lgbmr&#39;,
+                               LGBMRegressor(max_depth=5, n_estimators=500,
+                                             num_leaves=7))],
+                  final_estimator=XGBRegressor(base_score=0.5, booster=&#39;gbtree&#39;,
+                                               colsample_byle...
+                                               gamma=0.0, gpu_id=-1,
+                                               importance_type=None,
+                                               interaction_constraints=&#39;&#39;,
+                                               learning_rate=0.05,
+                                               max_delta_step=0, max_depth=6,
+                                               min_child_weight=3, missing=nan,
+                                               monotone_constraints=&#39;()&#39;,
+                                               n_estimators=500, n_jobs=24,
+                                               num_parallel_tree=1,
+                                               predictor=&#39;auto&#39;, random_state=0,
+                                               reg_alpha=0, reg_lambda=1,
+                                               scale_pos_weight=1, subsample=1,
+                                               tree_method=&#39;exact&#39;,
+                                               validate_parameters=1,
+                                               verbosity=None))
+</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Y_pred = pd.Series(reg.predict(X_test), name=<span class="string">&quot;SalePrice&quot;</span>)</span><br><span class="line"></span><br><span class="line">test_df = pd.read_csv(<span class="string">&#x27;input/test.csv&#x27;</span>)</span><br><span class="line"></span><br><span class="line">submission = pd.DataFrame(&#123;</span><br><span class="line">        <span class="string">&quot;Id&quot;</span>: test_df[<span class="string">&quot;Id&quot;</span>],</span><br><span class="line">        <span class="string">&quot;SalePrice&quot;</span>: Y_pred</span><br><span class="line">    &#125;)</span><br><span class="line">submission.to_csv(<span class="string">&#x27;output/submission.csv&#x27;</span>, index=<span class="literal">False</span>)</span><br><span class="line">submission</span><br></pre></td></tr></table></figure>
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+<pre><code>.dataframe tbody tr th &#123;
+    vertical-align: top;
+&#125;
+
+.dataframe thead th &#123;
+    text-align: right;
+&#125;
+</code></pre>
+<p></style></p>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Id</th>
+      <th>SalePrice</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1461</td>
+      <td>147325.421875</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1462</td>
+      <td>175843.781250</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1463</td>
+      <td>220419.203125</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1464</td>
+      <td>201636.468750</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>1465</td>
+      <td>178782.406250</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>1454</th>
+      <td>2915</td>
+      <td>103491.882812</td>
+    </tr>
+    <tr>
+      <th>1455</th>
+      <td>2916</td>
+      <td>93984.984375</td>
+    </tr>
+    <tr>
+      <th>1456</th>
+      <td>2917</td>
+      <td>203098.515625</td>
+    </tr>
+    <tr>
+      <th>1457</th>
+      <td>2918</td>
+      <td>144845.687500</td>
+    </tr>
+    <tr>
+      <th>1458</th>
+      <td>2919</td>
+      <td>285919.437500</td>
+    </tr>
+  </tbody>
+</table>
+<p>1459 rows × 2 columns</p>
+</div>
+
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/107752696">https://zhuanlan.zhihu.com/p/107752696</a><br><a target="_blank" rel="noopener" href="https://codeleading.com/article/76832061981/">https://codeleading.com/article/76832061981/</a></p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>Post author:  </strong>Ryan
+  </li>
+  <li class="post-copyright-link">
+    <strong>Post link: </strong>
+    <a href="http://yoursite.com/2022/02/20/Kaggle/House%20Prices%20-%20Advanced%20Regression%20Techniques/" title="House Prices - Advanced Regression Techniques ------------------------------------------------------【Kaggle🏆】">http://yoursite.com/2022/02/20/Kaggle/House Prices - Advanced Regression Techniques/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/Kaggle%F0%9F%8F%86/" rel="tag"><i class="fa fa-tag"></i> Kaggle🏆</a>
+          </div>
+
+        
+  <div class="post-widgets">
+    <div class="wp_rating">
+      <div id="wpac-rating"></div>
+    </div>
+  </div>
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/02/17/Kaggle/Kaggle%20Competition%20Process%20and%20Template/" rel="prev" title="Kaggle Competition Process and Template ------------------------------------------------------------【Kaggle🏆】">
+      <i class="fa fa-chevron-left"></i> Kaggle Competition Process and Template ------------------------------------------------------------【Kaggle🏆】
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/06/18/Medical%20Imaging%20Technology/Positron%20Emission%20Tomography%20(PET)%20-%20%E5%89%AF%E6%9C%AC/" rel="next" title="Positron Emission Tomography (PET) ----------------------------------------------------------------------【PET💉】">
+      Positron Emission Tomography (PET) ----------------------------------------------------------------------【PET💉】 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#House-Prices-Advanced-Regression-Techniques"><span class="nav-number">1.</span> <span class="nav-text">House Prices - Advanced Regression Techniques</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%90%86%E8%A7%A3%E9%A2%98%E7%9B%AE"><span class="nav-number">1.1.</span> <span class="nav-text">理解题目</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%87%86%E5%A4%87"><span class="nav-number">1.2.</span> <span class="nav-text">数据准备</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%90%86%E8%A7%A3%E6%95%B0%E6%8D%AE"><span class="nav-number">1.3.</span> <span class="nav-text">理解数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B8%85%E6%B4%97%E6%95%B0%E6%8D%AE"><span class="nav-number">1.4.</span> <span class="nav-text">清洗数据</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E7%BC%BA%E5%A4%B1%E5%80%BC%E5%A4%9A%E6%89%80%E5%8D%A0%E6%AF%94%E5%88%97"><span class="nav-number">1.4.1.</span> <span class="nav-text">查看缺失值多所占比列</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E7%BC%BA%E5%A4%B1%E5%80%BC"><span class="nav-number">1.4.2.</span> <span class="nav-text">解决缺失值</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%89%B9%E5%BE%81%E5%B7%A5%E7%A8%8B"><span class="nav-number">1.5.</span> <span class="nav-text">特征工程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E8%A3%85%E6%8D%A2"><span class="nav-number">1.5.1.</span> <span class="nav-text">数据类型装换</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%89%B9%E5%BE%81%E9%80%89%E6%8B%A9"><span class="nav-number">1.5.2.</span> <span class="nav-text">特征选择</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%84%E4%BC%B0%E7%AE%97%E6%B3%95"><span class="nav-number">1.6.</span> <span class="nav-text">评估算法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E9%9B%86%E5%88%92%E5%88%86"><span class="nav-number">1.6.1.</span> <span class="nav-text">数据集划分</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%84%E4%BC%B0%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.6.2.</span> <span class="nav-text">评估模型</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BC%98%E5%8C%96%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.7.</span> <span class="nav-text">优化模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E8%B0%83%E5%8F%82"><span class="nav-number">1.7.1.</span> <span class="nav-text">算法调参</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">1.8.</span> <span class="nav-text">参考</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Ryan"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">Ryan</p>
+  <div class="site-description" itemprop="description"><font color="#444444">Truth, Goodness and Beauty</font></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">22</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Ryanlzz" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Ryanlzz" rel="noopener" target="_blank"><i class="fa fa-fw fa-fab fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:isliuze@gmail.com" title="E-Mail → mailto:isliuze@gmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-fa fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/people/ryan-91-34" title="ZHIHU → https:&#x2F;&#x2F;www.zhihu.com&#x2F;people&#x2F;ryan-91-34" rel="noopener" target="_blank"><i class="fa fa-fw fa-fab fa-zhihu"></i>ZHIHU</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/atom.xml" title="RSS → &#x2F;atom.xml"><i class="fa fa-fw fa-rss"></i>RSS</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ryan</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a>
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">Theme – <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/pjax/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/medium-zoom@1/dist/medium-zoom.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.getAttribute('pjax') !== null) {
+      element.setAttribute('pjax', '');
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+  <script pjax>
+  if (CONFIG.page.isPost) {
+    wpac_init = window.wpac_init || [];
+    wpac_init.push({
+      widget: 'Rating',
+      id: ,
+      el: 'wpac-rating',
+      color: 'fc6423'
+    });
+    (function() {
+      if ('WIDGETPACK_LOADED' in window) return;
+      WIDGETPACK_LOADED = true;
+      var mc = document.createElement('script');
+      mc.type = 'text/javascript';
+      mc.async = true;
+      mc.src = '//embed.widgetpack.com/widget.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mc, s.nextSibling);
+    })();
+  }
+  </script>
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+
+  
+
+    </div>
+</body>
+</html>

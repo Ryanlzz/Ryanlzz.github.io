@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon1.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon32.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico">
+  <link rel="mask-icon" href="/images/favicon1.png" color="#222">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.loli.net/css?family=Noto Sans Simplified Chinese:300,300italic,400,400italic,700,700italic|Roboto Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('http://yoursite.com').hostname,
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.7.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":true,"show_result":true,"style":"default"},
+    back2top: {"enable":true,"sidebar":true,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: true,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"buttons","active":null,"storage":true,"lazyload":true,"nav":{"disqus":{"text":"Load Disqus","order":-1}}},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":false,"async":true,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="Chapter 8 Boosting Methods AdaBoost提升方法是将弱学习算法提升为强学习算法的统计学习方法。在分类学习中，提升方法通过反复修改训练数据的权值分布，构建一系列基本分类器（弱分类器），并将这些基本分类器线性组合，构成一个强分类器。 AdaBoost算思路对于分类问题而言，给定一个训练样本集，求比较粗糙的分类规则（弱分类器）要比求精确的分类规则（强分类器）容易的多。提升方">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Boosting Methods AdaBoost ---------------------------------------------------------------【Mechine Learning💻】">
+<meta property="og:url" content="http://yoursite.com/2022/01/28/Machine%20Learning/Boosting%20Methods%20AdaBoost/index.html">
+<meta property="og:site_name" content="Ryan&#39;s Blog">
+<meta property="og:description" content="Chapter 8 Boosting Methods AdaBoost提升方法是将弱学习算法提升为强学习算法的统计学习方法。在分类学习中，提升方法通过反复修改训练数据的权值分布，构建一系列基本分类器（弱分类器），并将这些基本分类器线性组合，构成一个强分类器。 AdaBoost算思路对于分类问题而言，给定一个训练样本集，求比较粗糙的分类规则（弱分类器）要比求精确的分类规则（强分类器）容易的多。提升方">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-01-27T17:18:00.000Z">
+<meta property="article:modified_time" content="2022-06-23T15:31:42.000Z">
+<meta property="article:author" content="Ryan">
+<meta property="article:tag" content="Mechine Learning💻">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://yoursite.com/2022/01/28/Machine%20Learning/Boosting%20Methods%20AdaBoost/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>Boosting Methods AdaBoost ---------------------------------------------------------------【Mechine Learning💻】 | Ryan's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Ryan's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home🏠">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-desktop"></i>Home🏠</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="Searching..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="en">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/01/28/Machine%20Learning/Boosting%20Methods%20AdaBoost/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="Ryan">
+      <meta itemprop="description" content="<font color="#444444">Truth, Goodness and Beauty</font>">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ryan's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          Boosting Methods AdaBoost ---------------------------------------------------------------【Mechine Learning💻】
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2022-01-28 01:18:00" itemprop="dateCreated datePublished" datetime="2022-01-28T01:18:00+08:00">2022-01-28</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-06-23 23:31:42" itemprop="dateModified" datetime="2022-06-23T23:31:42+08:00">2022-06-23</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Mechine-Learning%F0%9F%92%BB/" itemprop="url" rel="index">
+                    <span itemprop="name">Mechine Learning💻</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Chapter-8-Boosting-Methods-AdaBoost"><a href="#Chapter-8-Boosting-Methods-AdaBoost" class="headerlink" title="Chapter 8 Boosting Methods AdaBoost"></a>Chapter 8 Boosting Methods AdaBoost</h1><p>提升方法是将弱学习算法提升为强学习算法的统计学习方法。在分类学习中，提升方法通过反复修改训练数据的权值分布，构建一系列基本分类器（弱分类器），并将这些基本分类器线性组合，构成一个强分类器。</p>
+<h2 id="AdaBoost算思路"><a href="#AdaBoost算思路" class="headerlink" title="AdaBoost算思路"></a>AdaBoost算思路</h2><p>对于分类问题而言，给定一个训练样本集，求比较粗糙的分类规则（弱分类器）要比求精确的分类规则（强分类器）容易的多。提升方法就是从弱学习算法出发，反复学习，得到一系列弱分类器，然后组合这些弱分类器，构成一个强分类器。最具代表性的是AdaBoost算法。</p>
+<p>AdaBoost算法的特点是通过迭代每次学习一个基本分类器。每次迭代中，提高那些被前一轮分类器错误分类数据的权值，而降低那些被正确分类的数据的权值。最后，AdaBoost将基本分类器的线性组合作为强分类器，其中给分类误差率小的基本分类器以大的权值，给分类误差率大的基本分类器以小的权值。</p>
+<h2 id="Bagging和Boost"><a href="#Bagging和Boost" class="headerlink" title="Bagging和Boost"></a>Bagging和Boost</h2><p>“<strong>自助聚合”（bagging）</strong>和<strong>“提升”（boost）</strong>是构建组合模型的两种最主要的方法，所谓的组合模型是由多个基本模型构成的模型，组合模型的预测效果往往比任意一个基本模型的效果都要好。</p>
+<ul>
+<li>bagging：也叫装袋法，简单来说就是通过自助法(Bootstrap)产生 T 个数据集，从而并行地训练出 T 个决策边界不同的模型，最后通过一人一票的方式得到集成模型：</li>
+<li>boost：每个基本模型训练时的数据集采用不同权重，针对上一个基本模型分类错误的样本增加权重，使得新的模型重点关注误分类样本</li>
+</ul>
+<h2 id="AdaBoost-算法步骤"><a href="#AdaBoost-算法步骤" class="headerlink" title="AdaBoost 算法步骤"></a>AdaBoost 算法步骤</h2><p>1）给每个训练样本（$x_{1},x_{2},….,x_{N}$）分配权重，初始权重$w_{1}$均为1&#x2F;N。</p>
+<p>2）针对带有权值的样本进行训练，得到模型$G_m$（初始模型为G1）。</p>
+<p>3）计算模型$G_m$的误分率$e_m&#x3D;\sum_{i&#x3D;1}^Nw_iI(y_i\not&#x3D; G_m(x_i))$</p>
+<p>4）计算模型$G_m$的系数$\alpha_m&#x3D;0.5\log[(1-e_m)&#x2F;e_m]$</p>
+<p>5）根据误分率e和当前权重向量$w_m$更新权重向量$w_{m+1}$。</p>
+<p>6）计算组合模型$f(x)&#x3D;\sum_{m&#x3D;1}^M\alpha_mG_m(x_i)$的误分率。</p>
+<p>7）当组合模型的误分率或迭代次数低于一定阈值，停止迭代；否则，回到步骤2</p>
+<h2 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h2><h3 id="按原理实现"><a href="#按原理实现" class="headerlink" title="按原理实现"></a>按原理实现</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">from</span> sklearn.datasets <span class="keyword">import</span> load_iris</span><br><span class="line"><span class="keyword">from</span> sklearn.model_selection  <span class="keyword">import</span> train_test_split</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">AdaBoost</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, n_estimators=<span class="number">50</span>, learning_rate=<span class="number">1.0</span></span>):</span><br><span class="line">        self.clf_num = n_estimators</span><br><span class="line">        self.learning_rate = learning_rate</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">init_args</span>(<span class="params">self, datasets, labels</span>):</span><br><span class="line"></span><br><span class="line">        self.X = datasets</span><br><span class="line">        self.Y = labels</span><br><span class="line">        self.M, self.N = datasets.shape</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 弱分类器数目和集合</span></span><br><span class="line">        self.clf_sets = []</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 初始化weights</span></span><br><span class="line">        self.weights = [<span class="number">1.0</span> / self.M] * self.M</span><br><span class="line"></span><br><span class="line">        <span class="comment"># G(x)系数 alpha</span></span><br><span class="line">        self.alpha = []</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_G</span>(<span class="params">self, features, labels, weights</span>):</span><br><span class="line">        m = <span class="built_in">len</span>(features)</span><br><span class="line">        error = <span class="number">100000.0</span>  <span class="comment"># 无穷大</span></span><br><span class="line">        best_v = <span class="number">0.0</span></span><br><span class="line">        <span class="comment"># 单维features</span></span><br><span class="line">        features_min = <span class="built_in">min</span>(features)</span><br><span class="line">        features_max = <span class="built_in">max</span>(features)</span><br><span class="line">        n_step = (features_max - features_min +</span><br><span class="line">                  self.learning_rate) // self.learning_rate</span><br><span class="line">        <span class="comment"># print(&#x27;n_step:&#123;&#125;&#x27;.format(n_step))</span></span><br><span class="line">        direct, compare_array = <span class="literal">None</span>, <span class="literal">None</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, <span class="built_in">int</span>(n_step)):</span><br><span class="line">            v = features_min + self.learning_rate * i</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> v <span class="keyword">not</span> <span class="keyword">in</span> features:</span><br><span class="line">                <span class="comment"># 误分类计算</span></span><br><span class="line">                compare_array_positive = np.array(</span><br><span class="line">                    [<span class="number">1</span> <span class="keyword">if</span> features[k] v <span class="keyword">else</span> -<span class="number">1</span> <span class="keyword">for</span> k <span class="keyword">in</span> <span class="built_in">range</span>(m)])</span><br><span class="line">                weight_error_positive = <span class="built_in">sum</span>([</span><br><span class="line">                    weights[k] <span class="keyword">for</span> k <span class="keyword">in</span> <span class="built_in">range</span>(m)</span><br><span class="line">                    <span class="keyword">if</span> compare_array_positive[k] != labels[k]</span><br><span class="line">                ])</span><br><span class="line"></span><br><span class="line">                compare_array_nagetive = np.array(</span><br><span class="line">                    [-<span class="number">1</span> <span class="keyword">if</span> features[k] v <span class="keyword">else</span> <span class="number">1</span> <span class="keyword">for</span> k <span class="keyword">in</span> <span class="built_in">range</span>(m)])</span><br><span class="line">                weight_error_nagetive = <span class="built_in">sum</span>([</span><br><span class="line">                    weights[k] <span class="keyword">for</span> k <span class="keyword">in</span> <span class="built_in">range</span>(m)</span><br><span class="line">                    <span class="keyword">if</span> compare_array_nagetive[k] != labels[k]</span><br><span class="line">                ])</span><br><span class="line"></span><br><span class="line">                <span class="keyword">if</span> weight_error_positive &lt; weight_error_nagetive:</span><br><span class="line">                    weight_error = weight_error_positive</span><br><span class="line">                    _compare_array = compare_array_positive</span><br><span class="line">                    direct = <span class="string">&#x27;positive&#x27;</span></span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    weight_error = weight_error_nagetive</span><br><span class="line">                    _compare_array = compare_array_nagetive</span><br><span class="line">                    direct = <span class="string">&#x27;nagetive&#x27;</span></span><br><span class="line"></span><br><span class="line">                <span class="comment"># print(&#x27;v:&#123;&#125; error:&#123;&#125;&#x27;.format(v, weight_error))</span></span><br><span class="line">                <span class="keyword">if</span> weight_error &lt; error:</span><br><span class="line">                    error = weight_error</span><br><span class="line">                    compare_array = _compare_array</span><br><span class="line">                    best_v = v</span><br><span class="line">        <span class="keyword">return</span> best_v, direct, error, compare_array</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 计算alpha</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_alpha</span>(<span class="params">self, error</span>):</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0.5</span> * np.log((<span class="number">1</span> - error) / error)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 规范化因子</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_Z</span>(<span class="params">self, weights, a, clf</span>):</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">sum</span>([</span><br><span class="line">            weights[i] * np.exp(-<span class="number">1</span> * a * self.Y[i] * clf[i])</span><br><span class="line">            <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(self.M)</span><br><span class="line">        ])</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 权值更新</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_w</span>(<span class="params">self, a, clf, Z</span>):</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(self.M):</span><br><span class="line">            self.weights[i] = self.weights[i] * np.exp(</span><br><span class="line">                -<span class="number">1</span> * a * self.Y[i] * clf[i]) / Z</span><br><span class="line"></span><br><span class="line">    <span class="comment"># G(x)的线性组合</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_f</span>(<span class="params">self, alpha, clf_sets</span>):</span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">G</span>(<span class="params">self, x, v, direct</span>):</span><br><span class="line">        <span class="keyword">if</span> direct == <span class="string">&#x27;positive&#x27;</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">1</span> <span class="keyword">if</span> x v <span class="keyword">else</span> -<span class="number">1</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">return</span> -<span class="number">1</span> <span class="keyword">if</span> x v <span class="keyword">else</span> <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">fit</span>(<span class="params">self, X, y</span>):</span><br><span class="line">        self.init_args(X, y)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> epoch <span class="keyword">in</span> <span class="built_in">range</span>(self.clf_num):</span><br><span class="line">            best_clf_error, best_v, clf_result = <span class="number">100000</span>, <span class="literal">None</span>, <span class="literal">None</span></span><br><span class="line">            <span class="comment"># 根据特征维度, 选择误差最小的</span></span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(self.N):</span><br><span class="line">                features = self.X[:, j]</span><br><span class="line">                <span class="comment"># 分类阈值，分类误差，分类结果</span></span><br><span class="line">                v, direct, error, compare_array = self._G(</span><br><span class="line">                    features, self.Y, self.weights)</span><br><span class="line"></span><br><span class="line">                <span class="keyword">if</span> error &lt; best_clf_error:</span><br><span class="line">                    best_clf_error = error</span><br><span class="line">                    best_v = v</span><br><span class="line">                    final_direct = direct</span><br><span class="line">                    clf_result = compare_array</span><br><span class="line">                    axis = j</span><br><span class="line"></span><br><span class="line">                <span class="comment"># print(&#x27;epoch:&#123;&#125;/&#123;&#125; feature:&#123;&#125; error:&#123;&#125; v:&#123;&#125;&#x27;.format(epoch, self.clf_num, j, error, best_v))</span></span><br><span class="line">                <span class="keyword">if</span> best_clf_error == <span class="number">0</span>:</span><br><span class="line">                    <span class="keyword">break</span></span><br><span class="line"></span><br><span class="line">            <span class="comment"># 计算G(x)系数a</span></span><br><span class="line">            a = self._alpha(best_clf_error)</span><br><span class="line">            self.alpha.append(a)</span><br><span class="line">            <span class="comment"># 记录分类器</span></span><br><span class="line">            self.clf_sets.append((axis, best_v, final_direct))</span><br><span class="line">            <span class="comment"># 规范化因子</span></span><br><span class="line">            Z = self._Z(self.weights, a, clf_result)</span><br><span class="line">            <span class="comment"># 权值更新</span></span><br><span class="line">            self._w(a, clf_result, Z)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">#             print(&#x27;classifier:&#123;&#125;/&#123;&#125; error:&#123;:.3f&#125; v:&#123;&#125; direct:&#123;&#125; a:&#123;:.5f&#125;&#x27;.format(epoch+1, self.clf_num, error, best_v, final_direct, a))</span></span><br><span class="line"><span class="comment">#             print(&#x27;weight:&#123;&#125;&#x27;.format(self.weights))</span></span><br><span class="line"><span class="comment">#             print(&#x27;\n&#x27;)</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">predict</span>(<span class="params">self, feature</span>):</span><br><span class="line">        result = <span class="number">0.0</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(self.clf_sets)):</span><br><span class="line">            axis, clf_v, direct = self.clf_sets[i]</span><br><span class="line">            f_input = feature[axis]</span><br><span class="line">            result += self.alpha[i] * self.G(f_input, clf_v, direct)</span><br><span class="line">        <span class="comment"># sign</span></span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span> <span class="keyword">if</span> result <span class="number">0</span> <span class="keyword">else</span> -<span class="number">1</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">score</span>(<span class="params">self, X_test, y_test</span>):</span><br><span class="line">        right_count = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(X_test)):</span><br><span class="line">            feature = X_test[i]</span><br><span class="line">            <span class="keyword">if</span> self.predict(feature) == y_test[i]:</span><br><span class="line">                right_count += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> right_count / <span class="built_in">len</span>(X_test)</span><br><span class="line"></span><br><span class="line"><span class="comment"># data</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">create_data</span>():</span><br><span class="line">    iris = load_iris()</span><br><span class="line">    df = pd.DataFrame(iris.data, columns=iris.feature_names)</span><br><span class="line">    df[<span class="string">&#x27;label&#x27;</span>] = iris.target</span><br><span class="line">    df.columns = [<span class="string">&#x27;sepal length&#x27;</span>, <span class="string">&#x27;sepal width&#x27;</span>, <span class="string">&#x27;petal length&#x27;</span>, <span class="string">&#x27;petal width&#x27;</span>, <span class="string">&#x27;label&#x27;</span>]</span><br><span class="line">    data = np.array(df.iloc[:<span class="number">100</span>, [<span class="number">0</span>, <span class="number">1</span>, -<span class="number">1</span>]])</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(data)):</span><br><span class="line">        <span class="keyword">if</span> data[i,-<span class="number">1</span>] == <span class="number">0</span>:</span><br><span class="line">            data[i,-<span class="number">1</span>] = -<span class="number">1</span></span><br><span class="line">    <span class="comment"># print(data)</span></span><br><span class="line">    <span class="keyword">return</span> data[:,:<span class="number">2</span>], data[:,-<span class="number">1</span>]</span><br><span class="line"></span><br><span class="line">X, y = create_data()</span><br><span class="line">X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=<span class="number">0.2</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 100次结果</span></span><br><span class="line">result = []</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, <span class="number">101</span>):</span><br><span class="line">    X, y = create_data()</span><br><span class="line">    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=<span class="number">0.33</span>)</span><br><span class="line">    clf = AdaBoost(n_estimators=<span class="number">100</span>, learning_rate=<span class="number">0.2</span>)</span><br><span class="line">    clf.fit(X_train, y_train)</span><br><span class="line">    r = clf.score(X_test, y_test)</span><br><span class="line">    <span class="comment"># print(&#x27;&#123;&#125;/100 score：&#123;&#125;&#x27;.format(i, r))</span></span><br><span class="line">    result.append(r)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;average score:&#123;:.3f&#125;%&#x27;</span>.<span class="built_in">format</span>(<span class="built_in">sum</span>(result)))</span><br></pre></td></tr></table></figure>
+
+<h3 id="sk-learn-实现"><a href="#sk-learn-实现" class="headerlink" title="sk-learn 实现"></a>sk-learn 实现</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">from</span> sklearn.datasets <span class="keyword">import</span> load_iris</span><br><span class="line"><span class="keyword">from</span> sklearn.model_selection  <span class="keyword">import</span> train_test_split</span><br><span class="line"><span class="keyword">from</span> sklearn.ensemble <span class="keyword">import</span> AdaBoostClassifier</span><br><span class="line"></span><br><span class="line"><span class="comment"># data</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">create_data</span>():</span><br><span class="line">    iris = load_iris()</span><br><span class="line">    df = pd.DataFrame(iris.data, columns=iris.feature_names)</span><br><span class="line">    df[<span class="string">&#x27;label&#x27;</span>] = iris.target</span><br><span class="line">    df.columns = [<span class="string">&#x27;sepal length&#x27;</span>, <span class="string">&#x27;sepal width&#x27;</span>, <span class="string">&#x27;petal length&#x27;</span>, <span class="string">&#x27;petal width&#x27;</span>, <span class="string">&#x27;label&#x27;</span>]</span><br><span class="line">    data = np.array(df.iloc[:<span class="number">100</span>, [<span class="number">0</span>, <span class="number">1</span>, -<span class="number">1</span>]])</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(data)):</span><br><span class="line">        <span class="keyword">if</span> data[i,-<span class="number">1</span>] == <span class="number">0</span>:</span><br><span class="line">            data[i,-<span class="number">1</span>] = -<span class="number">1</span></span><br><span class="line">    <span class="comment"># print(data)</span></span><br><span class="line">    <span class="keyword">return</span> data[:,:<span class="number">2</span>], data[:,-<span class="number">1</span>]</span><br><span class="line"></span><br><span class="line">X, y = create_data()</span><br><span class="line">X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=<span class="number">0.2</span>)</span><br><span class="line"></span><br><span class="line">clf = AdaBoostClassifier(n_estimators=<span class="number">100</span>, learning_rate=<span class="number">0.5</span>)</span><br><span class="line">clf.fit(X_train, y_train)</span><br><span class="line"><span class="built_in">print</span>(clf.score(X_test,y_test))</span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>Post author:  </strong>Ryan
+  </li>
+  <li class="post-copyright-link">
+    <strong>Post link: </strong>
+    <a href="http://yoursite.com/2022/01/28/Machine%20Learning/Boosting%20Methods%20AdaBoost/" title="Boosting Methods AdaBoost ---------------------------------------------------------------【Mechine Learning💻】">http://yoursite.com/2022/01/28/Machine Learning/Boosting Methods AdaBoost/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/Mechine-Learning%F0%9F%92%BB/" rel="tag"><i class="fa fa-tag"></i> Mechine Learning💻</a>
+          </div>
+
+        
+  <div class="post-widgets">
+    <div class="wp_rating">
+      <div id="wpac-rating"></div>
+    </div>
+  </div>
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/01/27/Machine%20Learning/Support%20Vector%20Machines/" rel="prev" title="Support Vector Machines (SVM) ------------------------------------------------------------【Mechine Learning💻】">
+      <i class="fa fa-chevron-left"></i> Support Vector Machines (SVM) ------------------------------------------------------------【Mechine Learning💻】
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/01/31/Machine%20Learning/Gradient%20Boosting%20Tree%20(GBDT)/" rel="next" title="Gradient Boosting Tree (GBDT) -------------------------------------------------------------【Mechine Learning💻】">
+      Gradient Boosting Tree (GBDT) -------------------------------------------------------------【Mechine Learning💻】 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Chapter-8-Boosting-Methods-AdaBoost"><span class="nav-number">1.</span> <span class="nav-text">Chapter 8 Boosting Methods AdaBoost</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#AdaBoost%E7%AE%97%E6%80%9D%E8%B7%AF"><span class="nav-number">1.1.</span> <span class="nav-text">AdaBoost算思路</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Bagging%E5%92%8CBoost"><span class="nav-number">1.2.</span> <span class="nav-text">Bagging和Boost</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AdaBoost-%E7%AE%97%E6%B3%95%E6%AD%A5%E9%AA%A4"><span class="nav-number">1.3.</span> <span class="nav-text">AdaBoost 算法步骤</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.4.</span> <span class="nav-text">代码实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8C%89%E5%8E%9F%E7%90%86%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.4.1.</span> <span class="nav-text">按原理实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#sk-learn-%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.4.2.</span> <span class="nav-text">sk-learn 实现</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Ryan"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">Ryan</p>
+  <div class="site-description" itemprop="description"><font color="#444444">Truth, Goodness and Beauty</font></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">22</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Ryanlzz" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Ryanlzz" rel="noopener" target="_blank"><i class="fa fa-fw fa-fab fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:isliuze@gmail.com" title="E-Mail → mailto:isliuze@gmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-fa fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/people/ryan-91-34" title="ZHIHU → https:&#x2F;&#x2F;www.zhihu.com&#x2F;people&#x2F;ryan-91-34" rel="noopener" target="_blank"><i class="fa fa-fw fa-fab fa-zhihu"></i>ZHIHU</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/atom.xml" title="RSS → &#x2F;atom.xml"><i class="fa fa-fw fa-rss"></i>RSS</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ryan</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a>
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">Theme – <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/pjax/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/medium-zoom@1/dist/medium-zoom.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.getAttribute('pjax') !== null) {
+      element.setAttribute('pjax', '');
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+  <script pjax>
+  if (CONFIG.page.isPost) {
+    wpac_init = window.wpac_init || [];
+    wpac_init.push({
+      widget: 'Rating',
+      id: ,
+      el: 'wpac-rating',
+      color: 'fc6423'
+    });
+    (function() {
+      if ('WIDGETPACK_LOADED' in window) return;
+      WIDGETPACK_LOADED = true;
+      var mc = document.createElement('script');
+      mc.type = 'text/javascript';
+      mc.async = true;
+      mc.src = '//embed.widgetpack.com/widget.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mc, s.nextSibling);
+    })();
+  }
+  </script>
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+
+  
+
+    </div>
+</body>
+</html>
