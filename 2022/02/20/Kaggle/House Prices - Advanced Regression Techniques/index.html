@@ -48,16 +48,16 @@
   };
 </script>
 
-  <meta name="description" content="House Prices - Advanced Regression Techniques理解题目给出关于房价的一些信息，通过这些信息来预测对应的房价 数据准备123456789101112131415161718192021222324252627import pandas as pdimport numpy as npimport random#Visualizationimport pand">
+  <meta name="description" content="House Prices - Advanced Regression Techniques理解题目 给出关于房价的一些信息，通过这些信息来预测对应的房价  数据准备123456789101112131415161718192021222324252627import pandas as pdimport numpy as npimport random#Visualizationimport pa">
 <meta property="og:type" content="article">
 <meta property="og:title" content="House Prices - Advanced Regression Techniques ------------------------------------------------------【Kaggle🏆】">
 <meta property="og:url" content="http://yoursite.com/2022/02/20/Kaggle/House%20Prices%20-%20Advanced%20Regression%20Techniques/index.html">
 <meta property="og:site_name" content="Ryan&#39;s Blog">
-<meta property="og:description" content="House Prices - Advanced Regression Techniques理解题目给出关于房价的一些信息，通过这些信息来预测对应的房价 数据准备123456789101112131415161718192021222324252627import pandas as pdimport numpy as npimport random#Visualizationimport pand">
+<meta property="og:description" content="House Prices - Advanced Regression Techniques理解题目 给出关于房价的一些信息，通过这些信息来预测对应的房价  数据准备123456789101112131415161718192021222324252627import pandas as pdimport numpy as npimport random#Visualizationimport pa">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://s4.ax1x.com/2022/02/15/H21NRA.png">
 <meta property="article:published_time" content="2022-02-19T17:34:00.000Z">
-<meta property="article:modified_time" content="2022-06-23T15:58:10.000Z">
+<meta property="article:modified_time" content="2022-10-04T11:42:04.000Z">
 <meta property="article:author" content="Ryan">
 <meta property="article:tag" content="Kaggle🏆">
 <meta name="twitter:card" content="summary">
@@ -220,7 +220,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-06-23 23:58:10" itemprop="dateModified" datetime="2022-06-23T23:58:10+08:00">2022-06-23</time>
+                <time title="Modified: 2022-10-04 19:42:04" itemprop="dateModified" datetime="2022-10-04T19:42:04+08:00">2022-10-04</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -252,7 +252,9 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="House-Prices-Advanced-Regression-Techniques"><a href="#House-Prices-Advanced-Regression-Techniques" class="headerlink" title="House Prices - Advanced Regression Techniques"></a>House Prices - Advanced Regression Techniques</h1><h2 id="理解题目"><a href="#理解题目" class="headerlink" title="理解题目"></a>理解题目</h2><p>给出关于房价的一些信息，通过这些信息来预测对应的房价</p>
+        <h1 id="House-Prices-Advanced-Regression-Techniques"><a href="#House-Prices-Advanced-Regression-Techniques" class="headerlink" title="House Prices - Advanced Regression Techniques"></a>House Prices - Advanced Regression Techniques</h1><h2 id="理解题目"><a href="#理解题目" class="headerlink" title="理解题目"></a>理解题目</h2><blockquote>
+<p>给出关于房价的一些信息，通过这些信息来预测对应的房价</p>
+</blockquote>
 <h2 id="数据准备"><a href="#数据准备" class="headerlink" title="数据准备"></a>数据准备</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line"></span><br><span class="line"><span class="comment">#Visualization</span></span><br><span class="line"><span class="keyword">import</span> pandas_profiling <span class="keyword">as</span> ppf</span><br><span class="line"><span class="keyword">import</span> seaborn <span class="keyword">as</span> sns</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line">%matplotlib inline</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> Counter</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> StandardScaler</span><br><span class="line"><span class="keyword">from</span> sklearn <span class="keyword">import</span> preprocessing</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> sklearn.linear_model <span class="keyword">import</span> ElasticNet, Lasso,  BayesianRidge, LassoLarsIC</span><br><span class="line"><span class="keyword">from</span> sklearn.ensemble <span class="keyword">import</span> RandomForestRegressor,  GradientBoostingRegressor</span><br><span class="line"><span class="keyword">from</span> sklearn.kernel_ridge <span class="keyword">import</span> KernelRidge</span><br><span class="line"><span class="keyword">from</span> sklearn.svm <span class="keyword">import</span> SVR</span><br><span class="line"><span class="keyword">from</span> sklearn.pipeline <span class="keyword">import</span> make_pipeline</span><br><span class="line"><span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> RobustScaler</span><br><span class="line"><span class="keyword">from</span> sklearn.base <span class="keyword">import</span> BaseEstimator, TransformerMixin, RegressorMixin, clone</span><br><span class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> GridSearchCV,RandomizedSearchCV,StratifiedKFold, cross_val_score, KFold</span><br><span class="line"><span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> mean_squared_error</span><br><span class="line"><span class="keyword">from</span> xgboost <span class="keyword">import</span> XGBRegressor</span><br><span class="line"><span class="keyword">from</span> lightgbm <span class="keyword">import</span> LGBMRegressor</span><br><span class="line"><span class="keyword">from</span> sklearn.ensemble <span class="keyword">import</span> StackingRegressor</span><br></pre></td></tr></table></figure>
 
 
@@ -1280,6 +1282,25 @@ window.addEventListener('pjax:success', () => {
 
 
 
+<script pjax>
+if (document.querySelectorAll('div.pdf').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/pdfobject@2/pdfobject.min.js', () => {
+    document.querySelectorAll('div.pdf').forEach(element => {
+      PDFObject.embed(element.getAttribute('target'), element, {
+        pdfOpenParams: {
+          navpanes: 0,
+          toolbar: 0,
+          statusbar: 0,
+          pagemode: 'thumbs',
+          view: 'FitH'
+        },
+        PDFJS_URL: '/lib/pdf/web/viewer.html',
+        height: element.getAttribute('height') || '900px'
+      });
+    });
+  }, window.PDFObject);
+}
+</script>
 
 
 
